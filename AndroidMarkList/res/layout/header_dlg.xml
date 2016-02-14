@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+    
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    
+    android:layout_width="fill_parent"
+    android:layout_height="200dp"
+    >
+ 
+<TableLayout 
+    android:id="@+id/relativeLayout12"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#909090"
+    android:padding="10dp" >
+
+ 
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Class"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_CLASS"
+            android:capitalize="characters"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/EB_DIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" 
+            />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Division"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_DIV"
+            android:capitalize="characters"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/EB_STRIM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stream"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_STRIM"
+            android:capitalize="characters"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/EB_SUBJECT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+
+    
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subject"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_SUBJECT"
+            android:capitalize="characters"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/EB_MAX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+
+    
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max Marks"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_MAX"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/EB_EXAM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+    
+    
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Examination"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_EXAMINATION"
+            android:capitalize="characters"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/EB_EXAMINER"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+    
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Examiner"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_EXAMINER"
+            android:capitalize="characters"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/EB_DET"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+    
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text=":"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/EB_DET"
+            android:capitalize="characters"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/BCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </TableRow>
+    
+    
+    
+        
+  <LinearLayout
+   android:layout_width="fill_parent"
+   android:layout_height="wrap_content"
+   android:paddingTop="8dp"
+   android:paddingLeft="4dp"
+   android:paddingRight="4dp"
+   android:paddingBottom="4dp"
+   android:orientation="horizontal">
+
+ <Button
+     android:id="@+id/BCreate"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:layout_weight="1"
+     android:paddingLeft="8dp"
+     android:textSize="14dip"
+     android:paddingRight="8dp"
+     android:text="Update" />
+
+<Button
+    android:id="@+id/BCancel"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="14dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="Cancel" />
+    </LinearLayout>
+    
+</TableLayout>
+
+</ScrollView>
+
+
+

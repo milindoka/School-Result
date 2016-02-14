@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, Cloud101CalculatorActivity!</string>
+    <string name="app_name">MarkList</string>
+    <string name="b1">1</string>
+    <string name="clear">clear</string>
+    <string name="backspace">backspace</string>
+    <string name="okB">Okay</string>
+    <string name="ht" formatted ="false"><![CDATA[<ul>
+		<li>Commands are self explanatory. Additionally Long Press On Roll to Insert, Delete, Extend Roll.
+		</li>
+		
+		<li>Enter your School/College Name and Email(s) and save them permenantly using [Set] Commands on button bar</li>
+		
+		<li>Never touch the sliding part. Use UP or DN button to slide Roll up and down. Use JMP (Jump) button to adjust
+		 slide mismatch or go to any Roll number to view or edit.
+		 <li>To print marklist, install MRK.exe on any linux version in WINE. If you are in India, I would like
+		  you to use it on BOSS (www.bosslinux.in), the Indianized version of Linux, even though it works on Windows PC. 
+	       Transfer .mrk file to pc and double click the file to print.
+	      </li>
+	      <li>To bulk print marklists, keep all the files in MRK.exe folder and
+		  run MRK.exe. 
+		  </li>
+		  <li>To modify .mrk file on PC, use Marklist.jar.
+		  </li>  
+	      <li>MRKreport.exe will print table of all files kept in MRKreport.exe folder with page totals.
+	     </li>
+	     <li>You can use open source Thunderbird pop client with addon - Attachment Extracter - to auto-collect all marklist
+	         in one folder where MRK.exe is kept and bulk print them.
+	      </li> 
+	       <li>You can also use Dukto (FOSS) or any other file transfer app to send .mrk files from Android to PC
+	       </li>
+	       <li>MRKaccumulater.jar will make a compilation of all marklist files in one single text file Result.rlt.
+	        It is easy to prepare and print result sheets (Progress Cards) from this compilation if you have little programming knowledge.
+	        </li>
+	        <li>MRKaccumulator.jar can also make mySQL database file if you have Local Server WAMP or XAMPP installed.
+	         This database can be used to Upload the data on the Website of School or College
+	          </li> 
+	        <li>All 5 Apps are available free with source code on Sourceforge website in one zip file.</li>
+	<li>Download Link : http://sourceforge.net/projects/marklist/</li>
+	<li>Contact : oak444@gmail.com</li>
+	<li>Thanks to Niraj and Sahil for their valuable suggestions.</li>
+	<li>Thanks for using Marklist.</li>
+ </ul>
+ ]]></string>
+</resources>

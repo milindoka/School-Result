@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget0"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="0dp"
+    android:layout_height="fill_parent" android:layout_gravity="top">
+
+    <EditText
+        android:id="@+id/EB_FROLL"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_x="102dp"
+        android:layout_y="3dp"
+        android:inputType="phone"
+        android:maxLength="5"
+        android:textSize="15dp" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/Create"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_x="14dp"
+        android:layout_y="110dp"
+        android:text="Ok" />
+
+    <TextView
+        android:id="@+id/widget34_copy"
+        android:layout_width="74dp"
+        android:layout_height="wrap_content"
+        android:layout_x="14dp"
+        android:layout_y="71dp"
+        android:text="Last Roll"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/EB_LROLL"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_x="102dp"
+        android:layout_y="58dp"
+        android:inputType="phone"
+        android:maxLength="5"
+        android:textSize="15dp" />
+
+    <Button
+        android:id="@+id/Cancel"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_x="134dp"
+        android:layout_y="110dp"
+        android:text="Cancel" />
+
+    <TextView
+        android:id="@+id/widget34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="14dp"
+        android:layout_y="16dp"
+        android:text="First Roll"
+        android:textSize="15dp" />
+
+</AbsoluteLayout>

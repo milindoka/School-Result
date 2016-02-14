@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    
+    <TextView
+        android:id="@+id/setnoview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set No : 01"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content"
+ 	android:paddingTop="12dp"
+  	android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingBottom="4dp"
+    android:orientation="vertical">
+    
+            <TextView
+            android:id="@+id/SetDlgAKey"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dip"
+            android:background="@drawable/back"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:singleLine="true" 
+            android:typeface="monospace"
+            android:textColor="#000000"
+            android:paddingLeft="9sp"
+            />
+        
+           <TextView
+            android:id="@+id/SetDlgMKey"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dip"
+            android:background="@drawable/back"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium" 
+            android:singleLine="true" 
+            android:typeface="monospace"
+            android:textColor="#000000"
+            android:paddingLeft="9sp"/>
+
+           </LinearLayout>
+           
+           
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content"
+ 	android:paddingTop="12dp"
+  	android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingBottom="4dp"
+    android:orientation="horizontal">
+
+ <Button
+     android:id="@+id/SetDlgA"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:layout_weight="1"
+     android:paddingLeft="8dp"
+     android:textSize="20dip"
+     android:paddingRight="8dp"
+     android:text="A" />
+
+<Button
+    android:id="@+id/SetDlgB"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="B" />
+
+<Button
+    android:id="@+id/SetDlgC"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="C" />
+
+<Button
+    android:id="@+id/SetDlgD"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="D" />
+    
+    <Button
+    android:id="@+id/SetDlgLX"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="X" />
+
+
+
+
+    </LinearLayout>
+    
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content"
+ 	android:paddingTop="8dp"
+  	android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingBottom="4dp"
+    android:orientation="horizontal">
+
+ <Button
+     android:id="@+id/SetDlg1"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:layout_weight="1"
+     android:paddingLeft="8dp"
+     android:textSize="20dip"
+     android:paddingRight="8dp"
+     android:text="1" />
+
+<Button
+    android:id="@+id/SetDlg2"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="2" />
+
+<Button
+    android:id="@+id/SetDlg3"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="3" />
+
+<Button
+    android:id="@+id/SetDlg4"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="4" />
+
+<Button
+    android:id="@+id/SetDlgNX"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="X" />
+
+
+
+
+    </LinearLayout>
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="fill_parent"
+ android:layout_height="wrap_content"
+ android:paddingTop="8dp"
+  android:paddingLeft="4dp"
+     android:paddingRight="4dp"
+      android:paddingBottom="4dp"
+      android:orientation="horizontal">
+
+ <Button
+     android:id="@+id/Next"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:layout_weight="1"
+     android:paddingLeft="8dp"
+     android:textSize="20dip"
+     android:paddingRight="8dp"
+     android:text="Next" />
+
+<Button
+    android:id="@+id/Prev"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="Prev" />
+
+<Button
+    android:id="@+id/Finish"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="20dip"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:text="Finish" />
+
+
+
+    </LinearLayout>
+
+ 
+</LinearLayout>
