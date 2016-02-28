@@ -66,8 +66,8 @@ public class MRKaddtodb implements Printable
         
 	    static String subjectcodetriplet;
 	    static String pagetotalfromtable;
-	    boolean printing=false;
-	    int TotalReceived;
+	  //  boolean printing=false;
+	    static int TotalReceived;
 	    static ArrayList<String> strArray = new ArrayList<String>();
 	    static ArrayList<String> roll = new ArrayList<String>();///temp roll for printing
 	    static ArrayList<String> mark = new ArrayList<String>();/// temp mark for printing
@@ -263,6 +263,36 @@ public class MRKaddtodb implements Printable
          
     }
     
+    public static void DeleteNames() ///It assumes that if second token is >30 then it is a name and deletes
+    {                                /// Name is formatted to length 60 if it is < 60
+    	
+    	String ready="";
+    	String tempstr;
+        String temp[];
+        int TotalRolls=rollArray.size();
+       
+        for(int i=0;i<TotalRolls;i++)
+        { tempstr=rollArray.get(i);
+          temp=tempstr.split("#");
+           
+        if(temp[1].length()<30) continue; ///no name found
+        ready="";
+        int len=temp.length;
+        if(len<3) continue;  ///Remove the record in special case where only roll and name is present;
+          for(int j=0;j<len;j++)
+        	   {if(j==1) continue; /// skip name
+       	         if(j!=0) ready+="#"; ///separator   
+        		  ready+=temp[j];
+       	       }
+       	
+       	       rollArray.set(i,ready);
+       	 }
+    	
+}
+    
+    
+    
+    
     public static void CalculatePageTotal()
     { GrandTotal=0;
      int totalrows=tablePri.getRowCount();
@@ -289,12 +319,12 @@ public class MRKaddtodb implements Printable
     
      for(int i=0;i<TotalRolls;i++)
      { tempstr=rollArray.get(i);
-       if(!tempstr.contains(subjectcode)) continue;
+       if(!tempstr.contains(subjectcode+":")) continue;
     
        temp=tempstr.split("#");
        int len=temp.length;
        for(int j=0;j<len;j++)
-     	   {if(temp[j].contains(subjectcode)) 
+     	   {if(temp[j].contains(subjectcode+":")) 
     	       { 
      		     
      		   String strmarks[]; strmarks=temp[j].split(":");
@@ -605,18 +635,42 @@ try {f0.close();} catch (IOException e) {e.printStackTrace();}
     
     
    public static void LoadList()
-   {File f = new File(System.getProperty("java.class.path"));
+   {String fylename;
+   File f = new File(System.getProperty("java.class.path"));
 	File dir = f.getAbsoluteFile().getParentFile();
 	String path = dir.toString();
-//	show(path);
-	  String fnem=path+="/Result.rlt";
- 	BufferedReader reader=null;
- 	try {
- 		reader = new BufferedReader(new FileReader(fnem));
- 	} catch (FileNotFoundException e1) {
- 		// TODO Auto-generated catch block
- 		e1.printStackTrace();
- 	}
+	
+	fylename=path+="/Result.rlt";
+	//show(fylename);
+   File varTmpDir = new File(fylename); 
+   boolean exists = varTmpDir.exists();
+	
+	if(!exists)
+	{fylename="";
+	JFileChooser chooser = new JFileChooser();
+   FileNameExtensionFilter filter = new FileNameExtensionFilter(
+       "RLT", "rlt");
+   chooser.setFileFilter(filter);
+   int returnVal = chooser.showOpenDialog(null);
+   if(returnVal == JFileChooser.APPROVE_OPTION)
+   {
+   	fylename=chooser.getSelectedFile().getPath();
+   
+   //   show("You chose to open this file: " + fnem);
+      
+   }
+	if(fylename=="") return;
+	
+	}
+	strArray.removeAll(strArray);
+	BufferedReader reader=null;
+	try {
+		reader = new BufferedReader(new FileReader(fylename));
+	} catch (FileNotFoundException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	
  	
  	 subLine = null;
  	 try {
@@ -689,7 +743,7 @@ try {f0.close();} catch (IOException e) {e.printStackTrace();}
 	    
 	    public void PrintMarkSheet()
 	    {	JobNem=0;
-	    	printing=true;
+	    //	printing=true;
 	    	GetMarkRollPair();
 	        PrintService ps = findPrintService(PrinterName);                                    
 	        //create a printerJob
@@ -735,7 +789,7 @@ try {f0.close();} catch (IOException e) {e.printStackTrace();}
 	    
 	    public int PrintML(Graphics g, PageFormat pf, int page)
 	    {  if (page > 0) { /* We have only one page, and 'page' is zero-based */
-	    	               printing=false;
+	    	              // printing=false;
                         return NO_SUCH_PAGE;
                       }
 
@@ -862,6 +916,52 @@ try {f0.close();} catch (IOException e) {e.printStackTrace();}
       {TotalReceived=received;
     	  
       }
+      
+      
+      public void SaveReport()
+      {
+    	  if(TotalReceived==0) { show("No Marklist Compilation Loaded"); return; }
+    	  String filter="";
+    	  filter = JOptionPane.showInputDialog(null, "Enter Filter Such As U1 :", "List Of Received Mark Lists",
+    		        JOptionPane.WARNING_MESSAGE).toUpperCase();
+    	  if(filter=="") return;
+    	 // filter=filter.toUpperCase()
+    	  File f = new File(System.getProperty("java.class.path"));
+    		File dir = f.getAbsoluteFile().getParentFile();
+    		String path = dir.toString();
+    		String fnem=path+"/Received Marklists - " + filter + ".txt";
+    		 Collections.sort(rollArray);	
+    	     FileWriter f0=null;
+    		 try {f0 = new FileWriter(fnem);	} catch (IOException e1) {e1.printStackTrace();	}
+    	     String newLine = System.getProperty("line.separator");
+    	     
+    	     
+    	     
+    	     
+    	     for(int i=0;i<TotalReceived;i++)
+    	     {   
+    	    	
+    	          String tt= (String) GetData(tablePri,i,0);  
+    	          
+    	          String uu=tt.trim();
+    	          String vv=String.format("%1$-4s",uu);
+    	        String ss="["+(String) GetData(tablePri,i,1)+"="+vv+"]";
+    	        if(!ss.contains(filter)) continue;
+    	        try { f0.write(ss);	} catch (IOException e) {e.printStackTrace();	}
+    	        try { f0.write(newLine);	} catch (IOException e) {e.printStackTrace();	}  
+             }
+
+    	     try {f0.close();} catch (IOException e) {e.printStackTrace();}
+    
+ }
+
+    
+    	    
+
+    
+
+      
+      
       
  //////////////////////////START PRINTING REPORT TWO FUNCTIONS
 ///////////////////////////START PRINT REPORT AND FIND TOTAL PAGES AND SET JOB NAME
@@ -1022,7 +1122,7 @@ try {f0.close();} catch (IOException e) {e.printStackTrace();}
 	    
 	    public int PickAndPrintLoop(Graphics g, PageFormat pf, int page)
 	    {  if (page > 0) { /* We have only one page, and 'page' is zero-based */
-	    	               printing=false;
+	    	             //  printing=false;
                      return NO_SUCH_PAGE;
                    }
 

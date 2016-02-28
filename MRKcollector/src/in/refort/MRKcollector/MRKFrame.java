@@ -73,12 +73,12 @@ public class MRKFrame extends JFrame
 	private JButton btnUpdatePT;
     private JLabel Submitted;
     private JButton btnDelete;
-    private JButton btnNewButton;
+    private JButton btnSaveReport;
     private JButton btnPrintMrk;
 	private JButton btnSqliteDB;
     private JButton btnHelp;
  	private JButton btnNames;
-	private JButton btnRes01;
+	private JButton btnRemNems;
 	private JButton btnRes02;
 	private JButton btnRes03;
 	
@@ -700,6 +700,7 @@ btnSave.addMouseListener(new MouseAdapter() {
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{MRKaddtodb.WriteToDisk();
+	 
 	}
 });
 
@@ -800,20 +801,21 @@ contentPane.add(btnSort, gbc_btnSort);
 					gbc_btnCreateDb.gridy = 11;
 					contentPane.add(btnCreateDb, gbc_btnCreateDb);
 		
-		btnNewButton = new JButton("Print Report");
-		btnNewButton.setToolTipText("Print Report of All Marklists With Page Total");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnSaveReport = new JButton("Save Report");
+		btnSaveReport.setToolTipText("Print Report of All Marklists With Page Total");
+		btnSaveReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				mrkaddtodb.SetReceivedCount(TotalReceived);
-				mrkaddtodb.PrintReport();
+			//	mrkaddtodb.PrintReport();
+				mrkaddtodb.SaveReport();
 			}
 		});
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 0;
-		gbc_btnNewButton.gridy = 12;
-		contentPane.add(btnNewButton, gbc_btnNewButton);
+		GridBagConstraints gbc_btnSaveReport = new GridBagConstraints();
+		gbc_btnSaveReport.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSaveReport.gridx = 0;
+		gbc_btnSaveReport.gridy = 12;
+		contentPane.add(btnSaveReport, gbc_btnSaveReport);
 		
 		btnPrintMrk = new JButton("Print MRK");
 		btnPrintMrk.addMouseListener(new MouseAdapter() {
@@ -873,23 +875,23 @@ contentPane.add(btnSort, gbc_btnSort);
 		contentPane.add(btnNames, gbc_btnNames);
 		//////////////////////END OF GET NAMES //////////////////
 		
-/////////////////////////START OF GET Res01///////////////////////
-btnRes01 = new JButton("Res01");
-btnRes01.addMouseListener(new MouseAdapter() {
+/////////////////////////START RMOVE NAMES///////////////////////
+btnRemNems = new JButton("Del Names");
+btnRemNems.addMouseListener(new MouseAdapter() {
 @Override
 public void mouseClicked(MouseEvent e) 
-{show("GetRes01 routine to be added");
-
+{MRKaddtodb.DeleteNames();
+MRKaddtodb.CalculatePageTotal();
 }
 });
-btnRes01.setToolTipText("Reserved button Res01");
-GridBagConstraints gbc_btnRes01 = new GridBagConstraints();
-gbc_btnRes01.fill = GridBagConstraints.HORIZONTAL;
-gbc_btnRes01.insets = new Insets(0, 0, 5, 5);
-gbc_btnRes01.gridx = 2;
-gbc_btnRes01.gridy = 14;
-contentPane.add(btnRes01, gbc_btnRes01);
-//////////////////////END OF GET RES01 //////////////////
+btnRemNems.setToolTipText("Delete All Names");
+GridBagConstraints gbc_btnRemNems = new GridBagConstraints();
+gbc_btnRemNems.fill = GridBagConstraints.HORIZONTAL;
+gbc_btnRemNems.insets = new Insets(0, 0, 5, 5);
+gbc_btnRemNems.gridx = 2;
+gbc_btnRemNems.gridy = 14;
+contentPane.add(btnRemNems, gbc_btnRemNems);
+//////////////////////END OF GET RemNems //////////////////
 		
 		
 /////////////////////////START OF GET Res02///////////////////////
