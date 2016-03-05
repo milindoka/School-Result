@@ -30,7 +30,7 @@ import javax.swing.table.*;
 
 public class ResultView extends JFrame implements Printable 
 { 
-	JLabel label;
+	JLabel label,GTlabel;
 	static String fylename="";
     int grandtotal=0;	
     int GT1200=0;
@@ -128,11 +128,14 @@ SetPrinter sp;
 
 			@Override
     		    public Dimension getPreferredScrollableViewportSize() 
-    		   {Toolkit toolkit =  Toolkit.getDefaultToolkit ();
-        	   Dimension dim = toolkit.getScreenSize();
+    		   {//Toolkit toolkit =  Toolkit.getDefaultToolkit ();
+        	  //  Dimension dim = toolkit.getScreenSize();
 
-    		        int h = Math.min(9, table2.getRowCount());
-    		        return new Dimension(dim.width-300, table2.getRowHeight() * h);
+    		       int h = Math.min(9, table2.getRowCount());
+    		       return new Dimension(getPreferredSize().width, table2.getRowHeight() * h);
+    		        
+    		       // Dimension size = table2.getPreferredScrollableViewportSize();
+    		       // return new Dimension(Math.min(getPreferredSize().width, size.width), size.height);
     		    }
     		    
     	   };
@@ -156,7 +159,7 @@ SetPrinter sp;
     	   table2.getColumnModel().getColumn(9).setMinWidth(50);
     	   table2.getColumnModel().getColumn(10).setMinWidth(50);
     	   table2.getColumnModel().getColumn(11).setMinWidth(110);
-    	   
+    	  // table2.setVisibleColumnCount(10); 
     	   DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     	   centerRenderer.setHorizontalAlignment( JLabel.CENTER );
     	   for(int col=0;col<COLS;col++)
@@ -394,13 +397,13 @@ SetPrinter sp;
         
         
        label= new JLabel("No Printer Set",JLabel.CENTER);
-        
+       GTlabel= new JLabel("GT=0",JLabel.CENTER);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
        
       //   border = label.getBorder();
         Border margin = new EmptyBorder(3,10,3,10);
         label.setBorder(new CompoundBorder(border, margin));
-
+        GTlabel.setBorder(new CompoundBorder(border, margin));
         
       //  Dimension d = label.getPreferredSize();
       //  label.setPreferredSize(new Dimension(d.width+30,d.height+8));
@@ -410,6 +413,7 @@ SetPrinter sp;
         
         ResizeTable2(table2,ROWS);
         JPanel northPanel=new JPanel();
+        northPanel.add(GTlabel);
         northPanel.add(buttonSetPrinter);
         northPanel.add(label);
         add(northPanel,BorderLayout.NORTH);
@@ -443,6 +447,7 @@ SetPrinter sp;
         
      sp.LoadPreferences();
      label.setText(sp.PrinterName);
+     //GTlabel.setText("GT=");
         
     } /////END OF CONSTRUCTOR////////////////////
 
@@ -481,7 +486,7 @@ SetPrinter sp;
     }
     String ttt;
     ttt=String.format("%d",grandtotal);
-    label.setText(ttt);
+    GTlabel.setText(ttt);
  }  
     public void FillMatrix(int currindex)
 	 { for(int i=0;i<ROWS;i++)
