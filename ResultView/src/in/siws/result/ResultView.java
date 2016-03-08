@@ -49,7 +49,8 @@ public class ResultView extends JFrame implements Printable
 	int leftmargin=80,topmargin=72;
 	
 	static ArrayList<String> strArray = new ArrayList<String>();
-	static ArrayList<String> strMod = new ArrayList<String>();
+	static ArrayList<String> strModSci = new ArrayList<String>();
+	static ArrayList<String> strModCom = new ArrayList<String>();
 	
 	int ROWS=9;
     int COLS=12;
@@ -366,7 +367,8 @@ SetPrinter sp;
 
             public void actionPerformed(ActionEvent arg0)
             {if(strArray.size()==0) { show("No Data"); return;}
-             strMod.removeAll(strArray);
+             strModSci.removeAll(strModSci);
+             strModCom.removeAll(strModCom);
              String plate;
              int totalrecords=strArray.size();
              for(int i=0;i<totalrecords;i++) 
@@ -374,7 +376,7 @@ SetPrinter sp;
                if(!Remark.contains("FAIL")) continue;
                FillDistance();
                
-              // ShowMatrix();
+               ShowMatrix();
                plate=String.format("%4d : ",dist);
               plate=plate+"Roll :"+Roll+" = ";
               String tmpstr="";
@@ -386,11 +388,17 @@ SetPrinter sp;
                    if(tmpstr.length()==1) tmpstr+=" ";
                    plate=plate+"-"+tmpstr+"] "; /// moderation level per subject
                  }
-              
-              strMod.add(plate);
+            //if(i>1400) show(plate);
+               if(plate.contains("PHY")) strModSci.add(plate);
+              else 
+              strModCom.add(plate);
              }
-            Collections.sort(strMod);
+             
+            Collections.sort(strModSci);
+            Collections.sort(strModCom);
             SaveModReport();
+            show(strModSci.size());
+            show(strModCom.size());
          }
         });
 
@@ -730,24 +738,43 @@ SetPrinter sp;
  //////Save Moderation Report//////////////////////////////////////////
     public void SaveModReport()
     {
+    	File f = new File(System.getProperty("java.class.path"));
+    	File dir = f.getAbsoluteFile().getParentFile();
+    	String path = dir.toString();
+    	
+    	fylename=path+"/Moderation-Science.txt";
   	  
-  		String fnem="/home/milind/Result-Moderation-Report.txt";
+  		//String fnem="/home/milind/Result-Moderation-Report.txt";
   			
   	     FileWriter f0=null;
-  		 try {f0 = new FileWriter(fnem);	} catch (IOException e1) {e1.printStackTrace();	}
+  		 try {f0 = new FileWriter(fylename);	} catch (IOException e1) {e1.printStackTrace();	}
   	     String newLine = System.getProperty("line.separator");
-  	     
-  	     
-  	     
-  	     
-  	     for(int i=0;i<strMod.size();i++)
+  	       	     
+  	     for(int i=0;i<strModSci.size();i++)
   	     {   
   	    	
-  	         try { f0.write(strMod.get(i));	} catch (IOException e) {e.printStackTrace();	}
+  	         try { f0.write(strModSci.get(i));	} catch (IOException e) {e.printStackTrace();	}
   	        try { f0.write(newLine);	} catch (IOException e) {e.printStackTrace();	}  
            }
 
   	     try {f0.close();} catch (IOException e) {e.printStackTrace();}
+  	     
+         
+  	    fylename=path+"/Moderation-Commerce.txt";
+  	    FileWriter f1=null;
+		 try {f1 = new FileWriter(fylename);	} catch (IOException e1) {e1.printStackTrace();	}
+	     for(int i=0;i<strModCom.size();i++)
+	     {    try { f1.write(strModCom.get(i));	} catch (IOException e) {e.printStackTrace();	}
+	        try { f1.write(newLine);	} catch (IOException e) {e.printStackTrace();	}  
+         }
+
+	     try {f1.close();} catch (IOException e) {e.printStackTrace();}
+
+  	     
+  	     
+  	     
+  	     
+  	     
   
 }
 
