@@ -34,6 +34,8 @@ public class ResultView extends JFrame implements Printable
 	static String fylename="";
     int grandtotal=0;	
     int GT1200=0;
+    int TotalPrintPages=0;
+    int startpageindex=0,endpageindex=0;
 	public static Object GetData(int row_index, int col_index)
 	{ return table2.getModel().getValueAt(row_index, col_index); }  
 
@@ -217,10 +219,12 @@ SetPrinter sp;
 			{
 				ReadFromDisk();
 				if(fylename=="") return;
+				
+				CalculateGT();
+				currentindex=0;
 				FillMatrix(currentindex);
 				FillDistance();
 				ShowMatrix();
-				CalculateGT();
 				
 			}
         });
@@ -268,13 +272,15 @@ SetPrinter sp;
         });
 
 
-        JButton buttonPrint = new JButton("Print");
+        JButton buttonPrint = new JButton("Print This");
         buttonPrint.addActionListener(new ActionListener() 
         {
 
             public void actionPerformed(ActionEvent arg0) 
             {
-              PrintResultCard();  
+            	startpageindex=endpageindex=currentindex;
+               TotalPrintPages=0;
+              PrintResultCard(0);  ///  Jobnem 0 = Print Current Result 
             }
         });
 
@@ -287,19 +293,24 @@ SetPrinter sp;
             { String temp[],temp1[];
         	  String Range = JOptionPane.showInputDialog(null, "Print Range");
         	  temp1=Range.split("-");
-        	  int start=0,end=0;
+        	  startpageindex=endpageindex=TotalPrintPages=0;
         	 for(int i=0;i<strArray.size();i++)
         	  { temp=strArray.get(i).split("#");
-        		if(temp[0].contains(temp1[0])) {start=i;break;} 
+        		if(temp[0].contains(temp1[0])) {startpageindex=i;break;} 
               }
         	 
         	 for(int i=0;i<strArray.size();i++)
        	      { temp=strArray.get(i).split("#");
-       		    if(temp[0].contains(temp1[1])) {end=i;break;} 
+       		    if(temp[0].contains(temp1[1])) {endpageindex=i;break;} 
               }
        	
-          show(start);show(end);	 
-               
+        //  show(startpageindex);show(endpageindex);	 
+        	 
+        	if(startpageindex<=endpageindex) TotalPrintPages=endpageindex-startpageindex;
+        	else {show("Error In Range");}
+               if(TotalPrintPages>50) TotalPrintPages=50;
+               show(TotalPrintPages);
+               PrintResultCard(0);  ///  Jobnem 0 = Print Current Result
             }
         });
         
@@ -366,7 +377,7 @@ SetPrinter sp;
         	File dir = f.getAbsoluteFile().getParentFile();
         	String path = dir.toString();
         	
-        	fylename=path+"/Empty Names - Science.txt";
+        	fylename=path+"/Empty Names - List.txt";
       	  	
       	     FileWriter f0=null;
       		 try {f0 = new FileWriter(fylename);	} catch (IOException e1) {e1.printStackTrace();	}
@@ -545,7 +556,6 @@ SetPrinter sp;
 	   { difference=-difference;
        for(int i=0;i<difference;i++) model.removeRow(0);
 	  }
-		 
 	 }
  public void CalculateGT()
  {  grandtotal=0;
@@ -735,7 +745,7 @@ SetPrinter sp;
     /////////////////////////Load Result Data in Array/////////////
 
     
-    public static void ReadFromDisk()
+    public  void ReadFromDisk()
     {   //String fnme="";
 		
     	File f = new File(System.getProperty("java.class.path"));
@@ -794,6 +804,7 @@ SetPrinter sp;
 		}
     	
     
+    
     }
  //////Save Moderation Report//////////////////////////////////////////
     public void SaveModReport()
@@ -830,12 +841,8 @@ SetPrinter sp;
 
 	     try {f1.close();} catch (IOException e) {e.printStackTrace();}
 
-  	     
-  	     
-  	     
-  	     
-  	     
-  
+	      
+  	 
 }
 
 ///////////////////END OF SAVE MODERATION REPORT////////////////////////////////////
@@ -859,12 +866,12 @@ SetPrinter sp;
 
 		 
 	
-    public void PrintResultCard()
+    public void PrintResultCard(int PrnType)
     {	
     	
     	
     	//if(TotalReceived==0) { show("No Marklists To Prints"); return; }
-    	JobNem=0;
+    	JobNem=PrnType;
         //NumberOfReportPages=TotalReceived/EntriesPerPage;
         //if(TotalReceived%EntriesPerPage!=0) NumberOfReportPages++;
     
@@ -905,8 +912,8 @@ SetPrinter sp;
 			throws PrinterException 
 			{
 				switch(JobNem)
-					{case 0  : return PrintResults(g,pf,page);
-					 case 1  :
+					{case 0  : 
+					 case 1  :  return PrintResults(g,pf,page);
 					 default :  return PrintConsolidated(g,pf,page);
 					}
 	        
@@ -932,13 +939,13 @@ SetPrinter sp;
 		  */
 		
 		           ///strArray.size()-2
-		 if (pageno>3)    // MultipageDoc 'page no' is zero-based
+		 if (pageno>TotalPrintPages)    // MultipageDoc 'page no' is zero-based
 		    {  return NO_SUCH_PAGE;  // After NO_SUCH_PAGE, printer will stop printing.
 	        }
 		 
 		// OneStudent=strArray.get(pageno+1);
 		 // show(OneStudent);
-	     FillMatrix(pageno);
+	     FillMatrix(pageno+startpageindex);
 	
 		 int w[]={59,38,38,38,38,38,38,38,38,38,38,59};
 		 int ws[]={79,38,38};
