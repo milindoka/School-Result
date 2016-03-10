@@ -284,7 +284,21 @@ SetPrinter sp;
         {
 
             public void actionPerformed(ActionEvent arg0) 
-            {
+            { String temp[],temp1[];
+        	  String Range = JOptionPane.showInputDialog(null, "Print Range");
+        	  temp1=Range.split("-");
+        	  int start=0,end=0;
+        	 for(int i=0;i<strArray.size();i++)
+        	  { temp=strArray.get(i).split("#");
+        		if(temp[0].contains(temp1[0])) {start=i;break;} 
+              }
+        	 
+        	 for(int i=0;i<strArray.size();i++)
+       	      { temp=strArray.get(i).split("#");
+       		    if(temp[0].contains(temp1[1])) {end=i;break;} 
+              }
+       	
+          show(start);show(end);	 
                
             }
         });
@@ -305,6 +319,9 @@ SetPrinter sp;
             }
         });
 
+        
+        
+        
        
         JButton buttonSetPrinter = new JButton("Set Printer");
         buttonSetPrinter.addActionListener(new ActionListener() 
@@ -322,7 +339,49 @@ SetPrinter sp;
             }
         });
 
-       
+        JButton buttonEmptyNames = new JButton("Empty Names");
+        buttonEmptyNames.addActionListener(new ActionListener()
+        {
+
+			public void actionPerformed(ActionEvent arg0) 
+			{if(strArray.size()==0) { show("No Data"); return;}
+            strModSci.removeAll(strModSci); ///reuse mod
+          
+            
+           
+        	String tempstr;
+            String temp[];
+            int TotalRolls=strArray.size();
+           
+            for(int i=0;i<TotalRolls;i++)
+            { tempstr=strArray.get(i);
+              temp=tempstr.split("#");
+               
+             if(temp[1].length()<30) strModSci.add(temp[0]); ///no name found
+           	
+           
+           	 }
+            
+            File f = new File(System.getProperty("java.class.path"));
+        	File dir = f.getAbsoluteFile().getParentFile();
+        	String path = dir.toString();
+        	
+        	fylename=path+"/Empty Names - Science.txt";
+      	  	
+      	     FileWriter f0=null;
+      		 try {f0 = new FileWriter(fylename);	} catch (IOException e1) {e1.printStackTrace();	}
+      	     String newLine = System.getProperty("line.separator");
+      	       	     
+      	     for(int i=0;i<strModSci.size();i++)
+      	     {   
+      	         try { f0.write(strModSci.get(i));	} catch (IOException e) {e.printStackTrace();	}
+      	        try { f0.write(newLine);	} catch (IOException e) {e.printStackTrace();	}  
+               }
+      	     try {f0.close();} catch (IOException e) {e.printStackTrace();}
+      			
+			}
+        });
+
         
         JButton buttonStat = new JButton("Stat");
         buttonStat.addActionListener(new ActionListener() {
@@ -422,6 +481,7 @@ SetPrinter sp;
         ResizeTable2(table2,ROWS);
         JPanel northPanel=new JPanel();
         northPanel.add(GTlabel);
+        northPanel.add(buttonEmptyNames);
         northPanel.add(buttonSetPrinter);
         northPanel.add(label);
         add(northPanel,BorderLayout.NORTH);
