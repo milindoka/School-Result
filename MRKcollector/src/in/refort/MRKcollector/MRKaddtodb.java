@@ -404,16 +404,15 @@ public class MRKaddtodb implements Printable
     		 {  errorcount++;////
     		    absentcount=0;
     		    for(int j=1;j<hashpiece.length;j++)
-    		    { colonpiece=hashpiece[j].split(":");
-    		    if(colonpiece[1].contains("A")) absentcount++;
+    		    { if(hashpiece[j].contains(":AB"))  absentcount++;
+    		  
     		    }
     		    //show(absentcount);
     		    if((hashpiece.length-absentcount)==hash) 
     		    	{ correction++;
     		    	  String setString=hashpiece[0];
     		    	  for(int k=1;k<hashpiece.length;k++)
-    		    	  {  	  colonpiece=hashpiece[k].split(":");
-    	    		    if(!colonpiece[1].contains("A"))
+    		    	  {if(!hashpiece[k].contains(":AB"))
     	    		    	{setString+="#";
     	    		    	setString+=hashpiece[k];
     	    		    	}
