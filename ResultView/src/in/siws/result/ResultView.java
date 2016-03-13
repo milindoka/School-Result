@@ -38,7 +38,9 @@ public class ResultView extends JFrame implements Printable
     int startpageindex=0,endpageindex=0;
     JTextField NameField;
     JTextField DiviField;
+    String FirstLine="";    
     
+    Toast toast;
     
     
     
@@ -111,7 +113,12 @@ SetPrinter sp;
 //////////////////// CONSTRUCTOR////////////////////////	
    
     public ResultView() 
-    {  	sp=SetPrinter.getInstance();
+    {  	
+    	toast=Toast.getInstance();
+    	setLocationRelativeTo(null);/* Prevents constructor from being created automatically.*/
+    	
+    	
+    	sp=SetPrinter.getInstance();
     	
     //	String PrinterName="No Printer Set";
     	Object[][] data2 = 	{  {" "," ", " "," "," "," "," "," ", " "," "," "," " } }; /////define data types    
@@ -231,7 +238,7 @@ SetPrinter sp;
 				FillMatrix(currentindex);
 				FillDistance();
 				ShowMatrix();
-				
+				toast.AutoCloseMsg("Result Loaded");
 			}
         });
         JButton buttonNext = new JButton("Next");
@@ -397,6 +404,42 @@ SetPrinter sp;
         });
 
         
+        JButton buttonSaveResult = new JButton("Save Result");
+        buttonSaveResult.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent arg0) 
+            {File f = new File(System.getProperty("java.class.path"));
+        	File dir = f.getAbsoluteFile().getParentFile();
+        	String path = dir.toString();
+        	String fnem=path+"/Result.rlt";
+        		
+             FileWriter f0=null;
+        	 try {f0 = new FileWriter(fnem);	} catch (IOException e1) {e1.printStackTrace();	}
+             String newLine = System.getProperty("line.separator");
+             
+             
+             try { f0.write(FirstLine);	} catch (IOException e) {e.printStackTrace();	}
+             try { f0.write(newLine);	} catch (IOException e) {e.printStackTrace();	}
+
+             
+             
+        for(int i=0;i<strArray.size();i++)
+        {   
+            try { f0.write(strArray.get(i));	} catch (IOException e) {e.printStackTrace();	}
+            try { f0.write(newLine);	} catch (IOException e) {e.printStackTrace();	}
+
+        }
+
+        try {f0.close();} catch (IOException e) {e.printStackTrace();}
+       toast.AutoCloseMsg("Result Saved");
+            }
+        });
+
+        
+        
+        
+        
+        
         JButton buttonEmptyNames = new JButton("Empty Names");
         buttonEmptyNames.addActionListener(new ActionListener()
         {
@@ -539,6 +582,7 @@ SetPrinter sp;
         
         ResizeTable2(table2,ROWS);
         JPanel northPanel=new JPanel();
+        northPanel.add(buttonSaveResult);
         northPanel.add(NameField);
         northPanel.add(DiviField);
         northPanel.add(GTlabel);
@@ -843,9 +887,16 @@ SetPrinter sp;
     	
 				
 		String line = null;
+		try {
+			FirstLine=reader.readLine();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
     	try { while ((line = reader.readLine()) != null) 
 			{
-			 if(line.contains(":")) strArray.add(line);
+			 strArray.add(line);
 			
 			}
 		} catch (IOException e) {
