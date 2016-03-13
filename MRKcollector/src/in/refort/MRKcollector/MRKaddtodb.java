@@ -187,7 +187,7 @@ public class MRKaddtodb implements Printable
        
      }
     
-    public static void GetNames()
+    public void GetNames()
     {  
 		String fnem="";
 		
@@ -238,28 +238,47 @@ public class MRKaddtodb implements Printable
     //	for(int i=0;i<10;i++)
     	
     	
-    	 String temp[],stemp,stemp1;
+    	 String temp[],rollname[],stemp,stemp1="",sss="",ttt="",name;
     	
     	 for(int i=0;i<strArray.size();i++)
          {
              stemp=strArray.get(i);
-             temp=stemp.split("#");
-            int rrr=Integer.parseInt(temp[0].replaceAll("[^0-9.]",""));
- 	        String   sss=String.format("%5d",rrr);  
-    		 int index=GetIndex(sss);
+             rollname=stemp.split("#");
+           
+            int rrr=Integer.parseInt(rollname[0].replaceAll("[^0-9.]",""));
+ 	         sss=String.format("%5d",rrr);  
+    		 int index=GetIndex(sss); /// -1 if index not found
 		    if(index>0)
 			{
-		     stemp=rollArray.get(index);
-		     int tt=stemp.indexOf('#');
-		     stemp1=stemp.substring(tt);
-		     
-		     String name=String.format("%-60s",temp[1].trim());
-		     String ttt=sss+"#"+name+stemp1;
-		     
+		     stemp=rollArray.get(index); //reuse stemp
+		     temp=stemp.split("#");
+		     if(temp[1].length()>30) /// name already there
+		     temp[1]=String.format("%-60s",rollname[1].trim());
+		     else
+		     temp[0]+="#"+rollname[1].trim();
+		    // ttt=sss+"#"+name+stemp1;
+		     ttt=temp[0];
+		     for(int j=1;j<temp.length;j++)
+		    	 {ttt+="#";
+		    	  ttt+=temp[j];
+		    	 }
 		     rollArray.set(index,ttt);
 		     }
           }
           
+    	 
+    	 for(int i=0;i<rollArray.size();i++)
+    	 { stemp=rollArray.get(i);
+    	   int tt=stemp.indexOf('#');
+	       stemp1=stemp.substring(tt);
+           temp=stemp.split("#");
+           if(temp[1].length()<30)
+            { name=String.format("%-60s"," ");
+	          ttt=temp[0]+"#"+name+stemp1;
+	          rollArray.set(i,ttt);
+            }
+		 }
+    	 
          
     }
     
@@ -388,7 +407,7 @@ public class MRKaddtodb implements Printable
         
     
     public static void Rectify(int hash)
-    {String temp,hashpiece[],colonpiece[];
+    {String temp,hashpiece[];
      int lines=rollArray.size();
      int errorcount=0;
      int vacantcount=0;

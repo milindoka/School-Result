@@ -280,6 +280,7 @@ public int ReplaceDialog()
 	{File f = new File(System.getProperty("java.class.path"));
 	File dir = f.getAbsoluteFile().getParentFile();
 	String path = dir.toString();
+//	show(path);
 	File d1file = new File(path+"/Accepted");
 	if (!d1file.exists()) {
 		if (d1file.mkdir()) {
