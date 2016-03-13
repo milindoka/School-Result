@@ -36,6 +36,12 @@ public class ResultView extends JFrame implements Printable
     int GT1200=0;
     int TotalPrintPages=0;
     int startpageindex=0,endpageindex=0;
+    JTextField NameField;
+    JTextField DiviField;
+    
+    
+    
+    
 	public static Object GetData(int row_index, int col_index)
 	{ return table2.getModel().getValueAt(row_index, col_index); }  
 
@@ -105,10 +111,7 @@ SetPrinter sp;
 //////////////////// CONSTRUCTOR////////////////////////	
    
     public ResultView() 
-    {  
-    	
-    	sp=SetPrinter.getInstance();
-    	
+    {  	sp=SetPrinter.getInstance();
     	
     //	String PrinterName="No Printer Set";
     	Object[][] data2 = 	{  {" "," ", " "," "," "," "," "," ", " "," "," "," " } }; /////define data types    
@@ -123,6 +126,9 @@ SetPrinter sp;
     	          //all cells false
     	          return true;
     	       }
+    	       
+    	       
+    	       
     	   };
     	   
  table2 = new JTable(model2){
@@ -191,7 +197,7 @@ SetPrinter sp;
     	
     	   
     	  
-    	   
+    	   table2.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     	   
     	   table2.setBorder(new EtchedBorder(EtchedBorder.RAISED));
     	   table2.setShowHorizontalLines(true);
@@ -267,7 +273,47 @@ SetPrinter sp;
         {  
 
             public void actionPerformed(ActionEvent arg0) 
-            { CalculateGT();
+            {   int GT1200old=GT1200;
+            	JTableHeader th = table2.getTableHeader();
+            	TableColumnModel tcm = th.getColumnModel();
+            	TableColumn tc;
+            	String subttile;
+            	String marks="";
+            	
+            	
+            	String one="",temp="";////=strArray.get(currentindex);
+                one+=Roll+"#";
+                temp=String.format("%-60s",NameField.getText().trim());
+                one+=temp;
+                for(int i=0;i<8;i++)
+                	for(int j=0;j<4;j++)
+                 {
+                 tc=tcm.getColumn(3+i);
+                 subttile=(String) tc.getHeaderValue();
+                 if(subttile.length()==0) continue;
+                 marks=(String) GetData(j,3+i);
+                 if(marks.length()==0) continue;
+                 one+="#";
+                 one+=DiviField.getText()+"="+Row[j]+"="+subttile+":"+marks;
+                  
+                 }
+             //   show("<html><body><p style='width: 600px;'>"+one+"</p></body></html>");
+                strArray.set(currentindex, one);
+                FillMatrix(currentindex);
+                FillDistance();
+                ShowMatrix();
+                grandtotal=grandtotal+GT1200-GT1200old;
+                
+                
+                String ttt;
+                ttt=String.format("%d",grandtotal);
+                GTlabel.setText(ttt);
+           //     CalculateGT();
+            //    tc=tcm.getColumn(9);
+           //     String empty=(String) tc.getHeaderValue();
+             
+                
+             	
             }
         });
 
@@ -350,6 +396,7 @@ SetPrinter sp;
             }
         });
 
+        
         JButton buttonEmptyNames = new JButton("Empty Names");
         buttonEmptyNames.addActionListener(new ActionListener()
         {
@@ -472,7 +519,8 @@ SetPrinter sp;
          }
         });
 
-        
+        NameField = new JTextField(30);
+        DiviField = new JTextField(2);
         
        label= new JLabel("No Printer Set",JLabel.CENTER);
        GTlabel= new JLabel("GT=0",JLabel.CENTER);
@@ -491,6 +539,8 @@ SetPrinter sp;
         
         ResizeTable2(table2,ROWS);
         JPanel northPanel=new JPanel();
+        northPanel.add(NameField);
+        northPanel.add(DiviField);
         northPanel.add(GTlabel);
         northPanel.add(buttonEmptyNames);
         northPanel.add(buttonSetPrinter);
@@ -565,6 +615,10 @@ SetPrinter sp;
     String ttt;
     ttt=String.format("%d",grandtotal);
     GTlabel.setText(ttt);
+    FillMatrix(currentindex);
+    FillDistance();
+    ShowMatrix();
+    
  }  
     public void FillMatrix(int currindex)
 	 { for(int i=0;i<ROWS;i++)
@@ -578,12 +632,16 @@ SetPrinter sp;
 	     String temp[];
          String sub[];
          String OneStudent=strArray.get(currindex);
-        // show(CurrentIndex);
-         temp=OneStudent.split("#");  ///Make pieces of the record cutting at #
-         Roll=temp[0]; ///Get Roll Number
-         if(temp[1].length()>30) Roll+="       Name :     "+temp[1];
          
-         this.setTitle("Roll No : "+ Roll);
+         temp=OneStudent.split("#");  ///Make pieces of the record cutting at #
+         if(temp.length>=3) { sub=temp[2].split("="); //Cut further at "="
+                              DiviField.setText(sub[0]);
+                             }
+         
+         Roll=temp[0]; ///Get Roll Number
+         if(temp[1].length()>30) NameField.setText(temp[1]); else NameField.setText("");
+         
+         this.setTitle("Roll No : "+Roll);
          // now array temp is filled with pieces
          // temp[0]="101"
       	 // temp[1]="A=T1=TAM:42"
