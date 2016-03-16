@@ -3,6 +3,7 @@ package in.siws.result;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -27,6 +28,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class ResultView extends JFrame implements Printable 
 { 
@@ -41,7 +45,7 @@ public class ResultView extends JFrame implements Printable
     String FirstLine="";    
     
     Toast toast;
-    
+    DocumentFilter filter = new UppercaseDocumentFilter();    
     
     
 	public static Object GetData(int row_index, int col_index)
@@ -241,7 +245,9 @@ SetPrinter sp;
 				toast.AutoCloseMsg("Result Loaded");
 			}
         });
+        
         JButton buttonNext = new JButton("Next");
+        //buttonNext.setMnemonic(KeyEvent.VK_PAGE_DOWN); // Shortcut: PgDN
         buttonNext.addActionListener(new ActionListener() 
         {
         	
@@ -258,8 +264,72 @@ SetPrinter sp;
             
             }
         });
+        
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        .addKeyEventDispatcher(new KeyEventDispatcher(){
+           public boolean dispatchKeyEvent(KeyEvent e){
+             if(e.getID() == KeyEvent.KEY_PRESSED)
+             {
+               if(e.getKeyCode() == KeyEvent.VK_PAGE_DOWN ) 
+               {
+            	   if(currentindex<strArray.size()-1)
+                   {currentindex++;
+               
+                   FillMatrix(currentindex);
+                   FillDistance();
+                   ShowMatrix();
+                   }
+               }
+               
+               
+               if(e.getKeyCode() == KeyEvent.VK_PAGE_UP )
+               {
+            	   
+               
+               if(currentindex>0) 	   
+               { currentindex--;  
+          	    FillMatrix(currentindex);
+          	    FillDistance();
+          	    ShowMatrix();
+          	   }
+               
+               }
+               
+               if(e.getKeyCode() == KeyEvent.VK_DELETE )
+               {  int DELETE=0;
+               int result = JOptionPane.showConfirmDialog(null, 
+      				   "Delete This Roll ?",null, JOptionPane.YES_NO_OPTION);
+           	   
+           	   /////Confirm Delete
+      			
+           	  if(result==DELETE)
+           	  {
+           	   grandtotal=grandtotal-GT1200;
+                  String ttt;
+                  ttt=String.format("%d",grandtotal);
+                  GTlabel.setText(ttt);
+           	   
+                  strArray.remove(currentindex);
+                  int totalrecords=strArray.size();
+                  if(currentindex>totalrecords-1) currentindex=totalrecords-1;
+                  FillMatrix(currentindex);
+      			   FillDistance();
+      			   ShowMatrix();
+           	  }
+           	    
+           	 
+           }
+           
+               
+               
+               
+             }
+             return false;}});
+     
+        
 
         JButton buttonPrev = new JButton("Prev");
+      //  buttonNext.setMnemonic(KeyEvent.VK_PAGE_UP); // Shortcut: PgUP
         buttonPrev.addActionListener(new ActionListener() 
         {
 
@@ -273,7 +343,6 @@ SetPrinter sp;
                
             }
         });
-
 
         JButton buttonUpdate = new JButton("Update");
         buttonUpdate.addActionListener(new ActionListener() 
@@ -381,6 +450,105 @@ SetPrinter sp;
             	}
                
             }
+        });
+
+        JButton buttonDelVac = new JButton("Delete Vacants");
+        buttonDelVac.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent arg0) 
+            {  int SKIP=1,DELETE=2;
+            	String onestudent,temp[],errorMessage = "";
+                int hashcount;
+         
+            do { // Show input dialog with current error message, if any
+                String stringInput = JOptionPane.showInputDialog
+                		(errorMessage + "Enter Hash Count");
+                try { hashcount = Integer.parseInt(stringInput);
+                    if (hashcount < 0 || hashcount > 100) 
+                     {  errorMessage = "That number is not within the \n" + "allowed range!\n";
+                        
+                     }
+                } catch (NumberFormatException e) 
+                {
+                    // The typed text was not an integer
+                    errorMessage = "The text you typed is not a number.\n";
+                    return;
+                }
+            } while (!errorMessage.isEmpty());
+            
+            if(!errorMessage.isEmpty()) return;
+                int totalrecords=strArray.size(); 
+            
+            	for (int j=0;j<totalrecords;j++)
+            	 { onestudent=strArray.get(j);
+            	   temp=onestudent.split("#");
+            	   if(temp.length==hashcount) continue;
+            	
+            	   currentindex=j; 
+            	   FillMatrix(currentindex);
+       			   FillDistance();
+       			   ShowMatrix();
+            	   
+            	   /////This is possibly vacant, so pop confirmation
+       			Object[] options = {"Cancel Process","Skip This Roll","Delete"};
+               int result = JOptionPane.showOptionDialog(null,
+                "Delete This Roll Permanently ?",
+                "Alert Dialog",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,
+                 null,        //do not use a custom Icon
+                 options,     //the titles of buttons
+                 options[0]); //default button title
+       			   
+       			  
+            	   ////else result=0 i.e YES
+            	   
+            	  if(result==DELETE)
+            	  {
+            	   grandtotal=grandtotal-GT1200;
+                   String ttt;
+                   ttt=String.format("%d",grandtotal);
+                   GTlabel.setText(ttt);
+            	   
+                   strArray.remove(currentindex);
+                   totalrecords=strArray.size();
+                   if(j>0) j--;
+                   continue;
+            	  }
+            	  if(result==SKIP) continue;
+            	  return;
+            	 }  
+            	 
+            }
+            
+        });
+
+        JButton buttonDelThis = new JButton("Delete This");
+        buttonDelThis.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent arg0) 
+            {  int DELETE=0;
+                int result = JOptionPane.showConfirmDialog(null, 
+       				   "Delete This Roll ?",null, JOptionPane.YES_NO_OPTION);
+            	   
+            	   /////Confirm Delete
+       			
+            	  if(result==DELETE)
+            	  {
+            	   grandtotal=grandtotal-GT1200;
+                   String ttt;
+                   ttt=String.format("%d",grandtotal);
+                   GTlabel.setText(ttt);
+            	   
+                   strArray.remove(currentindex);
+                   int totalrecords=strArray.size();
+                   if(currentindex>totalrecords-1) currentindex=totalrecords-1;
+                   FillMatrix(currentindex);
+       			   FillDistance();
+       			   ShowMatrix();
+            	  }
+            	    
+            	 
+            }
+            
         });
 
         
@@ -557,13 +725,16 @@ SetPrinter sp;
             Collections.sort(strModSci);
             Collections.sort(strModCom);
             SaveModReport();
-            show(strModSci.size());
-            show(strModCom.size());
+           toast.AutoCloseMsg("Saved Moderation Report");
          }
         });
 
         NameField = new JTextField(30);
+        ((AbstractDocument) NameField.getDocument()).setDocumentFilter(filter);
+
         DiviField = new JTextField(2);
+        ((AbstractDocument) DiviField.getDocument()).setDocumentFilter(filter);
+
         
        label= new JLabel("No Printer Set",JLabel.CENTER);
        GTlabel= new JLabel("GT=0",JLabel.CENTER);
@@ -603,6 +774,8 @@ SetPrinter sp;
         southPanel.add(buttonPrint);
         southPanel.add(buttonPrintAll);
         southPanel.add(buttonJump);
+        southPanel.add(buttonDelVac);
+        southPanel.add(buttonDelThis);
         //southPanel.add(buttonSetPrinter);
         
         add(southPanel, BorderLayout.SOUTH);
@@ -683,7 +856,7 @@ SetPrinter sp;
                              }
          
          Roll=temp[0]; ///Get Roll Number
-         if(temp[1].length()>30) NameField.setText(temp[1]); else NameField.setText("");
+         if(temp[1].length()>30) NameField.setText(temp[1].trim()); else NameField.setText("");
          
          this.setTitle("Roll No : "+Roll);
          // now array temp is filled with pieces
@@ -1160,4 +1333,25 @@ SetPrinter sp;
             }
         });
     }
+    
+    
+    
+    
+    class UppercaseDocumentFilter extends DocumentFilter
+    {
+        public void insertString(DocumentFilter.FilterBypass fb, int offset,
+                String text, javax.swing.text.AttributeSet attr) throws BadLocationException 
+                {
+
+            fb.insertString(offset, text.toUpperCase(), attr);
+                }
+
+        public void replace(DocumentFilter.FilterBypass fb, int offset, int length,
+                String text, javax.swing.text.AttributeSet attrs) throws BadLocationException
+                {
+
+            fb.replace(offset, length, text.toUpperCase(), attrs);
+        }
+    }
+    
 }
