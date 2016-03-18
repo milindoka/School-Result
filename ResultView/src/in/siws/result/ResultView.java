@@ -42,7 +42,9 @@ public class ResultView extends JFrame implements Printable
     int startpageindex=0,endpageindex=0;
     JTextField NameField;
     JTextField DiviField;
-    String FirstLine="";    
+    String FirstLine="";  
+    String Strim;
+    String AY="2015-16";
     
     Toast toast;
     DocumentFilter filter = new UppercaseDocumentFilter();    
@@ -60,7 +62,7 @@ public class ResultView extends JFrame implements Printable
 	{JOptionPane.showMessageDialog(null, msg);}
 	
 ///////////////////START OF VARIABLES//////////////////////////////////////
-	int leftmargin=80,topmargin=72;
+	int leftmargin=80,topmargin=172;
 	
 	static ArrayList<String> strArray = new ArrayList<String>();
 	static ArrayList<String> strModSci = new ArrayList<String>();
@@ -81,6 +83,7 @@ int gracetotal=0;
 String Remark;
 
 String StaticMatrix[][]={ 
+		        {"Examination","Max","Min"},
                 {"Terminal-I  (A)","50",""},
                 {"Terminal-II (B)","100",""},
                 {"Unit Test-I (C)","25",""},
@@ -858,7 +861,7 @@ SetPrinter sp;
 	     String temp[];
          String sub[];
          String OneStudent=strArray.get(currindex);
-         
+         if(OneStudent.contains("PHY:")) Strim="Science"; else Strim="Commerce";
          temp=OneStudent.split("#");  ///Make pieces of the record cutting at #
          if(temp.length>=3) { sub=temp[2].split("="); //Cut further at "="
                               DiviField.setText(sub[0]);
@@ -1241,7 +1244,7 @@ SetPrinter sp;
 		 int w[]={59,38,38,38,38,38,38,38,38,38,38,59};
 		 int ws[]={79,38,38};
 		 
-		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,8);
+		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,9);
 		 
 		 int tlxstatic=60;
 		 int tlx=leftmargin,tly=topmargin;
@@ -1251,12 +1254,14 @@ SetPrinter sp;
 	     int h=20,downshift=13;
 	     g.setFont(MyFont);
      
-	     g.drawString("Roll : "+Roll,tlxstatic,tly-20);
 	     
+	     g.drawString("Mark Sheet showing the number of marks Obtained by  " +NameField.getText().trim() ,tlxstatic,tly-40);
+	     g.drawString("Roll : "+Roll.trim() +"  Div : "+DiviField.getText()+" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
+	    
 	     //// Other routine table parts here
 	     
 	     
-	     for(int i=0;i<7;i++)
+	     for(int i=0;i<8;i++)
 	       { tlxstatic=60;
 	    	 for(int j=0;j<3;j++)
 	         {   g.drawRect(tlxstatic,tly+i*h,ws[j],h);
