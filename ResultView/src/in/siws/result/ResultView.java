@@ -657,8 +657,9 @@ SetPrinter sp;
 
             public void actionPerformed(ActionEvent arg0)
             {if(strArray.size()==0) { show("No Data"); return;}
-             int scicount=0,scifailcount=0,scipasscount=0;
-             int comcount=0,comfailcount=0,compasscount=0;
+             int sci=0,sciFA=0,sciPR=0,sciPA=0,sciG3=0,sciG2=0,sciG1=0;
+             int com=0,comFA=0,comPR=0,comPA=0,comG3=0,comG2=0,comG1=0;
+             
             	
              String temp;
              for(int i=0;i<strArray.size();i++)
@@ -666,23 +667,31 @@ SetPrinter sp;
             	temp=strArray.get(i);
             	FillMatrix(i);
             	if(temp.contains("PHY:"))
-            	{   scicount++;
-            		if(Remark=="FAIL") scifailcount++;
-            		else scipasscount++;
+            	{   sci++;
+            	    if(Remark=="FAIL") sciFA++;
+            	    if(Remark=="PROMOTED") sciPR++;
+            	    if(Remark=="Grade Pass") sciPA++;
+            	    if(Remark=="Grade III") sciG3++;
+            	    if(Remark=="Grade II") sciG2++;
+            	    if(Remark=="Grade I") sciG1++;
             	}
             	else
-            	{comcount++;
-            	if(Remark=="FAIL") comfailcount++;
-            	else compasscount++;
+            	{  com++;
+            	   if(Remark=="FAIL") comFA++;
+        	       if(Remark=="PROMOTED") comPR++;
+        	       if(Remark=="Grade Pass") comPA++;
+        	       if(Remark=="Grade III") comG3++;
+        	       if(Remark=="Grade II") comG2++;
+        	       if(Remark=="Grade I") comG1++;
+            		
             	}
             	
              }
              
-             String plate;
-             plate=String.format("Science  : %d\nPass : %d\nFail : %d\n\n" +
-             					 "Commrece : %d\nPass : %d\nFail : %d\n",
-             					 scicount, scipasscount,scifailcount,
-             					 comcount, compasscount,comfailcount);
+            String plate;
+             plate=String.format("Commerce  :  \n\nGrade I : %d\nGrade II : %d\nGrade III : %d\nGrade PASS : %d\nPROMOTED : %d\nPASS : %d\nFAIL : %d\nTotal : %d\n\n"+
+            		 "Science  :  \n\nGrade I : %d\nGrade II : %d\nGrade III : %d\nGrade PASS : %d\nPROMOTED : %d\nPASS : %d\nFAIL : %d\nTotal : %d\n\n"
+             					 ,comG1,comG2,comG3,comPA,comPR,com-comFA,comFA,com,sciG1,sciG2,sciG3,sciPA,sciPR,sci-sciFA,sciFA,sci);
              show(plate);
              
             }
