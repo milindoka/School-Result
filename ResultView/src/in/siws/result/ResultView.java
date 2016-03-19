@@ -491,10 +491,32 @@ SetPrinter sp;
             	   FillMatrix(currentindex);
        			   FillDistance();
        			   ShowMatrix();
-            	   
+            	 
+       			  /* 
+       			 javax.swing.JOptionPane.showMessageDialog(
+       			 /////JOptionPane Location decided in the following argument instead of null
+       			 new javax.swing.JFrame()
+       			 {
+       		      public boolean isShowing(){return true;}
+       		      public java.awt.Rectangle getBounds(){return new java.awt.Rectangle(1000,100,0,0);}
+       		    },   ///// end ofthis argument
+       		    
+       		    "Hello World");
+       			   
+       			   */
+       			   
+       			   
+       			   
             	   /////This is possibly vacant, so pop confirmation
        			Object[] options = {"Cancel Process","Skip This Roll","Delete"};
-               int result = JOptionPane.showOptionDialog(null,
+               int result = JOptionPane.showOptionDialog(
+            		   ///////////// first argument of JOptionPane for corner location
+            		   new javax.swing.JFrame()
+     			     { 
+        		      public boolean isShowing(){return true;}
+        		      public java.awt.Rectangle getBounds(){return new java.awt.Rectangle(1000,100,0,0);}
+        		    },  /////////////end of first argument of JOptionPane
+        		    
                 "Delete This Roll Permanently ?",
                 "Alert Dialog",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,
                  null,        //do not use a custom Icon
@@ -795,10 +817,10 @@ SetPrinter sp;
        // FillMatrix(CurrentIndex);
        // ShowMatrix();
         
-        for(int i=0;i<7;i++)
+        for(int i=1;i<8;i++)
  		   for(int j=0;j<3;j++)
  		   {
- 			   SetData(StaticMatrix[i][j],i,j);
+ 			   SetData(StaticMatrix[i][j],i-1,j);
  			   
  		   }
         
