@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 import javax.print.PrintService;
@@ -44,7 +45,7 @@ public class ResultView extends JFrame implements Printable
     JTextField DiviField;
     String FirstLine="";  
     String Strim;
-    String AY="2015-16";
+    String AY;
     
     Toast toast;
     DocumentFilter filter = new UppercaseDocumentFilter();    
@@ -126,6 +127,8 @@ SetPrinter sp;
     	
     	
     	sp=SetPrinter.getInstance();
+    	int year = Calendar.getInstance().get(Calendar.YEAR);
+    	AY=String.format("%d-%d",year-1,year%100);
     	
     //	String PrinterName="No Printer Set";
     	Object[][] data2 = 	{  {" "," ", " "," "," "," "," "," ", " "," "," "," " } }; /////define data types    
@@ -513,7 +516,9 @@ SetPrinter sp;
             		   ///////////// first argument of JOptionPane for corner location
             		   new javax.swing.JFrame()
      			     { 
-        		      public boolean isShowing(){return true;}
+        		     
+						private static final long serialVersionUID = 1L;
+					public boolean isShowing(){return true;}
         		      public java.awt.Rectangle getBounds(){return new java.awt.Rectangle(1000,100,0,0);}
         		    },  /////////////end of first argument of JOptionPane
         		    
@@ -1299,7 +1304,8 @@ SetPrinter sp;
 
          for(int j=0;j<9;j++)
         	 for(int i=0;i<8;i++)
-        	   { g.drawRect(tlx+j*width,tly+i*h, width, h);
+        	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
+        		 g.drawRect(tlx+j*width,tly+i*h, width, h);
 	             Centre(Matrix[i][j],width,tlx+j*width,tly+i*h+downshift,g);
 	           }
 	  
