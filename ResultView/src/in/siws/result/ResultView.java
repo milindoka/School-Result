@@ -970,7 +970,7 @@ SetPrinter sp;
      ////Fill 8th column
       GT1200=0;
       String plate;
-      Matrix[0][8]="Grand";
+      Matrix[0][8]="Total";
       for (int i=1; i<5;i++) { GT1200=GT1200+grand[i];
     	                       plate=String.format("%d",grand[i]);
                                Matrix[i][8]=plate; 
@@ -983,6 +983,12 @@ SetPrinter sp;
       
       plate=String.format("%d/650",avgtotal+evs);
       Matrix[6][8]=plate;
+      
+      Matrix[6][6]=Matrix[2][6];
+      if(Matrix[2][7].contains("01")) Matrix[6][7]="A"; else Matrix[6][7]="C";
+      if(Matrix[2][7].contains("02")) Matrix[6][7]="B";
+        
+      Matrix[2][6]=Matrix[2][7]=Matrix[5][6]=Matrix[5][7]=Matrix[7][6]=Matrix[7][7]="";
       
       if (gracecount>3 || gracetotal>30) { Remark="FAIL"; return; }
       
@@ -1000,6 +1006,8 @@ SetPrinter sp;
       if(percentage>75) { Remark="Grade I"; return; }
       if(percentage>60) { Remark="Grade II"; return; }
       if(percentage>45) { Remark="Grade III"; return; }
+      
+      
       
       Remark="Grade Pass"; 
 	  
