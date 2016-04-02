@@ -448,6 +448,9 @@ SetPrinter sp;
             public void actionPerformed(ActionEvent arg0) 
             {  String temp[];
             	String name = JOptionPane.showInputDialog(null, "Roll Number To Jump");
+  
+                if(name == null || name.isEmpty()) return;
+                
             	for(int i=0;i<strArray.size();i++)
             	{
             		temp=strArray.get(i).split("#");
@@ -577,6 +580,25 @@ SetPrinter sp;
             	  }
             	    
             	 
+            }
+            
+        });
+
+        JButton buttonFail = new JButton("Fail");
+        buttonFail.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent arg0) 
+            {             
+              int totalrecords=strArray.size();
+
+              for(int i=1;i<=totalrecords;i++)
+              {
+            	  
+            	FillMatrix((currentindex+i)%totalrecords); ///circular search for fail
+            	if(Remark.contains("FAIL")) {currentindex=(currentindex+i)%totalrecords; ShowMatrix(); break;} 
+              }
+            	
+            	
             }
             
         });
@@ -815,6 +837,7 @@ SetPrinter sp;
         southPanel.add(buttonJump);
         southPanel.add(buttonDelVac);
         southPanel.add(buttonDelThis);
+        southPanel.add(buttonFail);
         //southPanel.add(buttonSetPrinter);
         
         add(southPanel, BorderLayout.SOUTH);
