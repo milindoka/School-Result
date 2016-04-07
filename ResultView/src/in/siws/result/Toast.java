@@ -55,7 +55,7 @@ class Toast extends JFrame {
 
     	dialog.setVisible(true);
     	//create timer to dispose of dialog after 2 seconds
-    	Timer timer = new Timer(2000, new AbstractAction() {
+    	Timer timer = new Timer(3000, new AbstractAction() {
     	    /**
 			 * 
 			 */
@@ -69,7 +69,7 @@ class Toast extends JFrame {
 
     	//start timer to close JDialog as dialog modal we must start the timer before its visible
     	timer.start();
-    	
+    //	timer.setCoalesce(false);
     }
     
     

@@ -604,6 +604,46 @@ SetPrinter sp;
         });
 
         
+        JButton buttonMerit = new JButton("Merit");
+        buttonMerit.addActionListener(new ActionListener() 
+        {
+            public void actionPerformed(ActionEvent arg0) 
+            {             
+              if(strArray.size()==0) { show("No Data"); return;}
+              strModSci.removeAll(strModSci);
+              strModCom.removeAll(strModCom);
+              String plate,subtitles;
+              int totalrecords=strArray.size();
+              for(int i=0;i<totalrecords;i++) 
+              { FillMatrix(i);
+                if(Remark.contains("FAIL")) continue;
+               ShowMatrix();
+               plate=String.format("GT : %4d  ",GT1200);
+               plate=plate+"Roll :"+Roll;
+               subtitles="";
+               for(int j=3;j<9;j++)
+               {
+                 subtitles=subtitles+table2.getColumnModel().getColumn(j).getHeaderValue();         ///subject name
+                 subtitles+="=";
+                
+               }
+               
+                if(subtitles.contains("PHY")) strModSci.add(plate);
+                if(subtitles.contains("OCM")) strModCom.add(plate);
+              
+              }
+              
+             Collections.sort(strModSci);
+             Collections.sort(strModCom);
+             SaveReport("Merit");
+            
+          }
+              
+            	
+            
+            
+        });
+
         
         
        
@@ -764,7 +804,6 @@ SetPrinter sp;
              { FillMatrix(i);
                if(!Remark.contains("FAIL")) continue;
                FillDistance();
-               
                ShowMatrix();
                plate=String.format("%4d : ",dist);
               plate=plate+"Roll :"+Roll+" = ";
@@ -779,14 +818,14 @@ SetPrinter sp;
                  }
             //if(i>1400) show(plate);
                if(plate.contains("PHY")) strModSci.add(plate);
-              else 
-              strModCom.add(plate);
+               if(plate.contains("OCM")) strModCom.add(plate);
+             
              }
              
             Collections.sort(strModSci);
             Collections.sort(strModCom);
-            SaveModReport();
-           toast.AutoCloseMsg("Saved Moderation Report");
+            SaveReport("Moderation");
+           
          }
         });
 
@@ -838,6 +877,7 @@ SetPrinter sp;
         southPanel.add(buttonDelVac);
         southPanel.add(buttonDelThis);
         southPanel.add(buttonFail);
+        southPanel.add(buttonMerit);
         //southPanel.add(buttonSetPrinter);
         
         add(southPanel, BorderLayout.SOUTH);
@@ -1159,14 +1199,14 @@ SetPrinter sp;
     
     }
  //////Save Moderation Report//////////////////////////////////////////
-    public void SaveModReport()
+    public void SaveReport(String ReportName)
     {
     	File f = new File(System.getProperty("java.class.path"));
     	File dir = f.getAbsoluteFile().getParentFile();
     	String path = dir.toString();
     	
-    	fylename=path+"/Moderation-Science.txt";
-  	  
+    	fylename=path+"/"+ReportName+"-Science.txt";
+  	   //show(fylename);
   		//String fnem="/home/milind/Result-Moderation-Report.txt";
   			
   	     FileWriter f0=null;
@@ -1183,7 +1223,7 @@ SetPrinter sp;
   	     try {f0.close();} catch (IOException e) {e.printStackTrace();}
   	     
          
-  	    fylename=path+"/Moderation-Commerce.txt";
+  	    fylename=path+"/"+ReportName+"-Commerce.txt";
   	    FileWriter f1=null;
 		 try {f1 = new FileWriter(fylename);	} catch (IOException e1) {e1.printStackTrace();	}
 	     for(int i=0;i<strModCom.size();i++)
@@ -1193,11 +1233,11 @@ SetPrinter sp;
 
 	     try {f1.close();} catch (IOException e) {e.printStackTrace();}
 
-	      
+	     toast.AutoCloseMsg("Saved "+ReportName+" Report");
   	 
 }
 
-///////////////////END OF SAVE MODERATION REPORT////////////////////////////////////
+///////////////////END OF SAVE REPORT////////////////////////////////////
     
     
 	
