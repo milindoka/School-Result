@@ -43,7 +43,7 @@ class Toast extends JFrame {
         dialog.getContentPane().setBackground(Color.yellow);
     	dialog.setSize(100,100);
     	dialog.setAlwaysOnTop(true);   	
-    	dialog.setLocationRelativeTo(null);
+    	
     	dialog.getContentPane().add(label1, BorderLayout.NORTH);
         dialog.getContentPane().add(label, BorderLayout.CENTER);
         dialog.getContentPane().add(label2, BorderLayout.SOUTH);
@@ -52,10 +52,10 @@ class Toast extends JFrame {
     	dialog.setUndecorated(true);
             	
     	dialog.pack();
-
+    	dialog.setLocationRelativeTo(null);
     	dialog.setVisible(true);
     	//create timer to dispose of dialog after 2 seconds
-    	Timer timer = new Timer(3000, new AbstractAction() {
+    	Timer timer = new Timer(5000, new AbstractAction() {
     	    /**
 			 * 
 			 */
@@ -65,7 +65,7 @@ class Toast extends JFrame {
     	        dialog.dispose();
     	    }
     	});
-    	timer.setRepeats(false);//the timer should only go off once
+    	//timer.setRepeats(false);//the timer should only go off once
 
     	//start timer to close JDialog as dialog modal we must start the timer before its visible
     	timer.start();

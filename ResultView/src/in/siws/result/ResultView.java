@@ -595,7 +595,7 @@ SetPrinter sp;
               {
             	  
             	FillMatrix((currentindex+i)%totalrecords); ///circular search for fail
-            	if(Remark.contains("FAIL")) {currentindex=(currentindex+i)%totalrecords; ShowMatrix(); break;} 
+            	if(Remark.contains("FAIL")) {currentindex=(currentindex+i)%totalrecords; ShowMatrix(); FillDistance();break;} 
               }
             	
             	
@@ -603,7 +603,36 @@ SetPrinter sp;
             
         });
 
-        
+        JButton buttonxSub = new JButton("xSub");
+        buttonxSub.addActionListener(new ActionListener() 
+        { 
+          
+          
+            public void actionPerformed(ActionEvent arg0) 
+            {   String temp,hashpiece[];
+            
+          	  String subn = JOptionPane.showInputDialog(null, "Enter code of the Subject to be Removed");
+          	  if(subn==null) return;
+          	  subn=subn.trim();
+          	  if(subn.length()==0) return;
+          	    String sub="="+subn.toUpperCase();
+            	//show(sub);
+            	temp=strArray.get(currentindex);
+       	        hashpiece=temp.split("#");
+       	        String setString=hashpiece[0];
+       	 	    for(int j=1;j<hashpiece.length;j++)
+       		    { if(hashpiece[j].contains(sub)) continue;
+       		      setString+="#";
+       		      setString+=hashpiece[j];
+       		    }
+       		    	
+       		   strArray.set(currentindex,setString);
+       		   CalculateGT();
+            }
+            
+        });
+
+ 
         JButton buttonMerit = new JButton("Merit");
         buttonMerit.addActionListener(new ActionListener() 
         {
@@ -878,6 +907,7 @@ SetPrinter sp;
         southPanel.add(buttonDelThis);
         southPanel.add(buttonFail);
         southPanel.add(buttonMerit);
+        southPanel.add(buttonxSub);
         //southPanel.add(buttonSetPrinter);
         
         add(southPanel, BorderLayout.SOUTH);
@@ -1199,8 +1229,13 @@ SetPrinter sp;
     
     }
  //////Save Moderation Report//////////////////////////////////////////
-    public void SaveReport(String ReportName)
+    public void SaveReport(final String ReportName)
     {
+//    	SwingUtilities.invokeLater(new Runnable() {
+  //  	    public void run() {
+    	    
+    	////////////////////////worker thread to wait before message
+    	
     	File f = new File(System.getProperty("java.class.path"));
     	File dir = f.getAbsoluteFile().getParentFile();
     	String path = dir.toString();
@@ -1233,6 +1268,10 @@ SetPrinter sp;
 
 	     try {f1.close();} catch (IOException e) {e.printStackTrace();}
 
+
+	     
+    	
+    	
 	     toast.AutoCloseMsg("Saved "+ReportName+" Report");
   	 
 }
