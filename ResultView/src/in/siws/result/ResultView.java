@@ -46,7 +46,8 @@ public class ResultView extends JFrame implements Printable
     String FirstLine="";  
     String Strim;
     String AY;
-    
+   // boolean EVSfail;
+    boolean printpass=false;
     Toast toast;
     DocumentFilter filter = new UppercaseDocumentFilter();    
     
@@ -63,11 +64,12 @@ public class ResultView extends JFrame implements Printable
 	{JOptionPane.showMessageDialog(null, msg);}
 	
 ///////////////////START OF VARIABLES//////////////////////////////////////
-	int leftmargin=80,topmargin=172;
+	int leftmargin=80,topmargin=195;
 	
 	static ArrayList<String> strArray = new ArrayList<String>();
 	static ArrayList<String> strModSci = new ArrayList<String>();
 	static ArrayList<String> strModCom = new ArrayList<String>();
+	static ArrayList<Integer> intPasses = new ArrayList<Integer>();
 	
 	int ROWS=9;
     int COLS=12;
@@ -111,6 +113,7 @@ static JTable table2;
  private JScrollPane scrollPane2;
  
 SetPrinter sp;
+Options op;
 
 
 
@@ -127,6 +130,7 @@ SetPrinter sp;
     	
     	
     	sp=SetPrinter.getInstance();
+    	op=Options.getInstance();
     	int year = Calendar.getInstance().get(Calendar.YEAR);
     	AY=String.format("%d-%d",year-1,year%100);
     	
@@ -367,7 +371,7 @@ SetPrinter sp;
                 one+=Roll+"#";
                 temp=String.format("%-60s",NameField.getText().trim());
                 one+=temp;
-                for(int i=0;i<8;i++)
+                for(int i=0;i<6;i++)
                 	for(int j=0;j<4;j++)
                  {
                  tc=tcm.getColumn(3+i);
@@ -377,9 +381,28 @@ SetPrinter sp;
                  if(marks.length()==0) continue;
                  one+="#";
                  one+=DiviField.getText()+"="+Row[j]+"="+subttile+":"+marks;
-                  
                  }
+                
+                tc=tcm.getColumn(9);
+                subttile=(String) tc.getHeaderValue();
+                if(subttile.length()!=0) 
+                { marks=(String) GetData(5,9);
+                  if(marks.length()==0) ; 
+                  else 
+                	  one+="#"+DiviField.getText()+"=T2="+subttile+":"+marks;
+                }
+                  
+                tc=tcm.getColumn(10);
+                subttile=(String) tc.getHeaderValue();
+                if(subttile.length()!=0) 
+                { marks=(String) GetData(5,9);
+                  if(marks.length()==0) ; 
+                  else 
+                	  one+="#"+DiviField.getText()+"=T2="+subttile+":"+marks;
+                }   
+                
              //   show("<html><body><p style='width: 600px;'>"+one+"</p></body></html>");
+               // show(one);
                 strArray.set(currentindex, one);
                 FillMatrix(currentindex);
                 FillDistance();
@@ -419,8 +442,20 @@ SetPrinter sp;
 
             public void actionPerformed(ActionEvent arg0) 
             { String temp[],temp1[];
-        	  String Range = JOptionPane.showInputDialog(null, "Print Range");
+              intPasses.removeAll(intPasses);
+            //JTextField yField = new JTextField(10);
+
+            JPanel myPanel = new JPanel();
+            JCheckBox checkbox = new JCheckBox("Only Non-Failures");
+            //String message = "Are you sure you want to disconnect the selected products?";
+          //  boolean dontShow = checkbox.isSelected();
+            
+            myPanel.add(checkbox);
+        	  String Range = JOptionPane.showInputDialog(null,myPanel);
         	  temp1=Range.split("-");
+        	  printpass=checkbox.isSelected();
+        	//  if(checkbox.isSelected()) show("selected"); else show("non-selected");
+        	  
         	  startpageindex=endpageindex=TotalPrintPages=0;
         	 for(int i=0;i<strArray.size();i++)
         	  { temp=strArray.get(i).split("#");
@@ -432,12 +467,24 @@ SetPrinter sp;
        		    if(temp[0].contains(temp1[1])) {endpageindex=i;break;} 
               }
        	
+        	 
         //  show(startpageindex);show(endpageindex);	 
         	 
         	if(startpageindex<=endpageindex) TotalPrintPages=endpageindex-startpageindex;
         	else {show("Error In Range");}
-               if(TotalPrintPages>50) TotalPrintPages=50;
+              // if(TotalPrintPages>50) TotalPrintPages=50;
                show(TotalPrintPages);
+               
+               
+               for(int i=startpageindex;i<=endpageindex;i++)
+               {FillMatrix(i);
+                if(!Remark.contains("FAIL")) intPasses.add(i);
+            	   
+               }
+               if(printpass) {  TotalPrintPages=intPasses.size()-1;
+            	                PrintResultCard(2);
+                            }
+               else
                PrintResultCard(0);  ///  Jobnem 0 = Print Current Result
             }
         });
@@ -632,49 +679,25 @@ SetPrinter sp;
             
         });
 
- 
-        JButton buttonMerit = new JButton("Merit");
-        buttonMerit.addActionListener(new ActionListener() 
-        {
+        JButton buttonOptions = new JButton("Options");
+        buttonOptions.addActionListener(new ActionListener() 
+        { 
             public void actionPerformed(ActionEvent arg0) 
-            {             
-              if(strArray.size()==0) { show("No Data"); return;}
-              strModSci.removeAll(strModSci);
-              strModCom.removeAll(strModCom);
-              String plate,subtitles;
-              int totalrecords=strArray.size();
-              for(int i=0;i<totalrecords;i++) 
-              { FillMatrix(i);
-                if(Remark.contains("FAIL")) continue;
-               ShowMatrix();
-               plate=String.format("GT : %4d  ",GT1200);
-               plate=plate+"Roll :"+Roll;
-               subtitles="";
-               for(int j=3;j<9;j++)
-               {
-                 subtitles=subtitles+table2.getColumnModel().getColumn(j).getHeaderValue();         ///subject name
-                 subtitles+="=";
-                
-               }
-               
-                if(subtitles.contains("PHY")) strModSci.add(plate);
-                if(subtitles.contains("OCM")) strModCom.add(plate);
-              
-              }
-              
-             Collections.sort(strModSci);
-             Collections.sort(strModCom);
-             SaveReport("Merit");
-            
-          }
-              
+            {               
+            	int option=op.SelectOption();
             	
-            
+            	switch (option)
+            	{case 0 : break;
+            	 case 1 : SaveEmptyNames();break;
+            	 case 2 : Merit(); break;
+            	 case 3 : Mod();   break;
+            	 case 4 : Stat();  break;
+            	 default : break;
+            	}
+            }
             
         });
 
-        
-        
        
         JButton buttonSetPrinter = new JButton("Set Printer");
         buttonSetPrinter.addActionListener(new ActionListener() 
@@ -725,140 +748,8 @@ SetPrinter sp;
         });
 
         
-        
-        
-        
-        
-        JButton buttonEmptyNames = new JButton("Empty Names");
-        buttonEmptyNames.addActionListener(new ActionListener()
-        {
-
-			public void actionPerformed(ActionEvent arg0) 
-			{if(strArray.size()==0) { show("No Data"); return;}
-            strModSci.removeAll(strModSci); ///reuse mod
-          
-            
-           
-        	String tempstr;
-            String temp[];
-            int TotalRolls=strArray.size();
-           
-            for(int i=0;i<TotalRolls;i++)
-            { tempstr=strArray.get(i);
-              temp=tempstr.split("#");
-               
-             if(temp[1].length()<30) strModSci.add(temp[0]); ///no name found
-           	
-           
-           	 }
-            
-            File f = new File(System.getProperty("java.class.path"));
-        	File dir = f.getAbsoluteFile().getParentFile();
-        	String path = dir.toString();
-        	
-        	fylename=path+"/Empty Names - List.txt";
-      	  	
-      	     FileWriter f0=null;
-      		 try {f0 = new FileWriter(fylename);	} catch (IOException e1) {e1.printStackTrace();	}
-      	     String newLine = System.getProperty("line.separator");
-      	       	     
-      	     for(int i=0;i<strModSci.size();i++)
-      	     {   
-      	         try { f0.write(strModSci.get(i));	} catch (IOException e) {e.printStackTrace();	}
-      	        try { f0.write(newLine);	} catch (IOException e) {e.printStackTrace();	}  
-               }
-      	     try {f0.close();} catch (IOException e) {e.printStackTrace();}
-      			
-			}
-        });
-
-        
-        JButton buttonStat = new JButton("Stat");
-        buttonStat.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0)
-            {if(strArray.size()==0) { show("No Data"); return;}
-             int sci=0,sciFA=0,sciPR=0,sciPA=0,sciG3=0,sciG2=0,sciG1=0;
-             int com=0,comFA=0,comPR=0,comPA=0,comG3=0,comG2=0,comG1=0;
-             
-            	
-             String temp;
-             for(int i=0;i<strArray.size();i++)
-             {  
-            	temp=strArray.get(i);
-            	FillMatrix(i);
-            	if(temp.contains("PHY:"))
-            	{   sci++;
-            	    if(Remark=="FAIL") sciFA++;
-            	    if(Remark=="PROMOTED") sciPR++;
-            	    if(Remark=="Grade Pass") sciPA++;
-            	    if(Remark=="Grade III") sciG3++;
-            	    if(Remark=="Grade II") sciG2++;
-            	    if(Remark=="Grade I") sciG1++;
-            	}
-            	else
-            	{  com++;
-            	   if(Remark=="FAIL") comFA++;
-        	       if(Remark=="PROMOTED") comPR++;
-        	       if(Remark=="Grade Pass") comPA++;
-        	       if(Remark=="Grade III") comG3++;
-        	       if(Remark=="Grade II") comG2++;
-        	       if(Remark=="Grade I") comG1++;
-            		
-            	}
-            	
-             }
-             
-            String plate;
-             plate=String.format("Commerce  :  \n\nGrade I : %d\nGrade II : %d\nGrade III : %d\nGrade PASS : %d\nPROMOTED : %d\nPASS : %d\nFAIL : %d\nTotal : %d\n\n"+
-            		 "Science  :  \n\nGrade I : %d\nGrade II : %d\nGrade III : %d\nGrade PASS : %d\nPROMOTED : %d\nPASS : %d\nFAIL : %d\nTotal : %d\n\n"
-             					 ,comG1,comG2,comG3,comPA,comPR,com-comFA,comFA,com,sciG1,sciG2,sciG3,sciPA,sciPR,sci-sciFA,sciFA,sci);
-             show(plate);
-             
-            }
-        });
-
-
-        JButton buttonMod = new JButton("Mod");
-        buttonMod.addActionListener(new ActionListener()
-        {
-
-            public void actionPerformed(ActionEvent arg0)
-            {if(strArray.size()==0) { show("No Data"); return;}
-             strModSci.removeAll(strModSci);
-             strModCom.removeAll(strModCom);
-             String plate;
-             int totalrecords=strArray.size();
-             for(int i=0;i<totalrecords;i++) 
-             { FillMatrix(i);
-               if(!Remark.contains("FAIL")) continue;
-               FillDistance();
-               ShowMatrix();
-               plate=String.format("%4d : ",dist);
-              plate=plate+"Roll :"+Roll+" = ";
-              String tmpstr="";
-              for(int j=3;j<9;j++)
-                 { plate+="[";
-                   plate=plate+table2.getColumnModel().getColumn(j).getHeaderValue();         ///subject name
-                   tmpstr=(String) GetData(8,j);
-                   if(tmpstr.length()==0) tmpstr="00";
-                   if(tmpstr.length()==1) tmpstr+=" ";
-                   plate=plate+"-"+tmpstr+"] "; /// moderation level per subject
-                 }
-            //if(i>1400) show(plate);
-               if(plate.contains("PHY")) strModSci.add(plate);
-               if(plate.contains("OCM")) strModCom.add(plate);
-             
-             }
-             
-            Collections.sort(strModSci);
-            Collections.sort(strModCom);
-            SaveReport("Moderation");
-           
-         }
-        });
-
-        NameField = new JTextField(30);
+                      
+        NameField = new JTextField(60);
         ((AbstractDocument) NameField.getDocument()).setDocumentFilter(filter);
 
         DiviField = new JTextField(2);
@@ -886,7 +777,6 @@ SetPrinter sp;
         northPanel.add(NameField);
         northPanel.add(DiviField);
         northPanel.add(GTlabel);
-        northPanel.add(buttonEmptyNames);
         northPanel.add(buttonSetPrinter);
         northPanel.add(label);
         add(northPanel,BorderLayout.NORTH);
@@ -895,10 +785,8 @@ SetPrinter sp;
         add(centrePanel,BorderLayout.CENTER);
         JPanel southPanel = new JPanel();
         southPanel.add(buttonLoad);
-        southPanel.add(buttonNext);
         southPanel.add(buttonPrev);
-        southPanel.add(buttonStat);
-        southPanel.add(buttonMod);
+        southPanel.add(buttonNext);
         southPanel.add(buttonUpdate);
         southPanel.add(buttonPrint);
         southPanel.add(buttonPrintAll);
@@ -906,8 +794,8 @@ SetPrinter sp;
         southPanel.add(buttonDelVac);
         southPanel.add(buttonDelThis);
         southPanel.add(buttonFail);
-        southPanel.add(buttonMerit);
         southPanel.add(buttonxSub);
+        southPanel.add(buttonOptions);
         //southPanel.add(buttonSetPrinter);
         
         add(southPanel, BorderLayout.SOUTH);
@@ -988,7 +876,7 @@ SetPrinter sp;
                              }
          
          Roll=temp[0]; ///Get Roll Number
-         if(temp[1].length()>30) NameField.setText(temp[1].trim()); else NameField.setText("");
+         if(temp[1].length()>30) NameField.setText(temp[1].trim()); else NameField.setText(" ");
          
          this.setTitle("Roll No : "+Roll);
          // now array temp is filled with pieces
@@ -1019,6 +907,8 @@ SetPrinter sp;
 	                if(marks[1].length()!=0 && !marks[1].contains("AB")) 
 	                
 	                strtointeger=Integer.parseInt(marks[1].replaceAll("[^0-9.]",""));
+	                
+	                if(subindex>7){show(Roll); return;}
 	                subtotal[subindex]=subtotal[subindex]+strtointeger;
 	                
 	                //show(subtotal[subindex]);
@@ -1063,7 +953,7 @@ SetPrinter sp;
      ////Fill 8th column
       GT1200=0;
       String plate;
-      Matrix[0][8]="Total";
+      Matrix[0][8]="Total";Matrix[0][7]="PTE";
       for (int i=1; i<5;i++) { GT1200=GT1200+grand[i];
     	                       plate=String.format("%d",grand[i]);
                                Matrix[i][8]=plate; 
@@ -1083,9 +973,13 @@ SetPrinter sp;
         
       Matrix[2][6]=Matrix[2][7]=Matrix[5][6]=Matrix[5][7]=Matrix[7][6]=Matrix[7][7]="";
       
+      
+      
       if (gracecount>3 || gracetotal>30) { Remark="FAIL"; return; }
       
       for (int i=0; i<6;i++) if(grace[i]>10) { Remark="FAIL"; return; }
+      
+      if(evs<18) { Remark="FAIL"; return;}
       
       plate=String.format("%d/30",gracetotal);
       Matrix[7][8]=plate;
@@ -1100,9 +994,8 @@ SetPrinter sp;
       if(percentage>60) { Remark="Grade II"; return; }
       if(percentage>45) { Remark="Grade III"; return; }
       
-      
-      
       Remark="Grade Pass"; 
+      
 	  
 	 }
     
@@ -1276,6 +1169,7 @@ SetPrinter sp;
   	 
 }
 
+    
 ///////////////////END OF SAVE REPORT////////////////////////////////////
     
     
@@ -1306,7 +1200,7 @@ SetPrinter sp;
         //NumberOfReportPages=TotalReceived/EntriesPerPage;
         //if(TotalReceived%EntriesPerPage!=0) NumberOfReportPages++;
     
-        PrintService ps = findPrintService("pdf");                                    
+        PrintService ps = findPrintService(sp.PrinterName);                                    
         //create a printerJob
         PrinterJob job = PrinterJob.getPrinterJob();            
         //set the printService found (should be tested)
@@ -1345,6 +1239,7 @@ SetPrinter sp;
 				switch(JobNem)
 					{case 0  : 
 					 case 1  :  return PrintResults(g,pf,page);
+					 case 2  :  return PrintPasses(g,pf,page);
 					 default :  return PrintConsolidated(g,pf,page);
 					}
 	        
@@ -1376,10 +1271,91 @@ SetPrinter sp;
 		 
 		// OneStudent=strArray.get(pageno+1);
 		 // show(OneStudent);
-	     FillMatrix(pageno+startpageindex);
+	    
+		 FillMatrix(pageno+startpageindex);
+	    
+		 int w[]={63,38,38,38,38,38,38,38,38,38,38,68};
+		 int ws[]={83,38,38};
+		 
+		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,9);
+		 
+		 int tlxstatic=60;
+		 int tlx=leftmargin,tly=topmargin;
 	
-		 int w[]={59,38,38,38,38,38,38,38,38,38,38,59};
-		 int ws[]={79,38,38};
+	     /// 72 dots per inch, leave left & top margin 1 inch each 
+		 /// on actual paper, printer also leaves some margin
+	     int h=20,downshift=13;
+	     g.setFont(MyFont);
+     
+	     g.drawString("Mark Sheet showing the number of marks Obtained by  ",tlxstatic,tly-60);
+	     g.drawString(NameField.getText().trim()+"    Roll : "+Roll.trim()+"   Div : "+DiviField.getText(),tlxstatic,tly-40);
+	     g.drawString(" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
+	    
+	     //// Other routine table parts here
+	     
+	     
+	     for(int i=0;i<8;i++)
+	       { tlxstatic=60;
+	    	 for(int j=0;j<3;j++)
+	         {   g.drawRect(tlxstatic,tly+i*h,ws[j],h);
+	    		 Centre(StaticMatrix[i][j],ws[j],tlxstatic,tly+i*h+downshift,g);
+	    		 tlxstatic=tlxstatic+ws[j];
+	         }
+	     
+	         }
+	     
+	    
+         tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
+	     int width=w[2]; ///same width for all 6 subjects
+
+         for(int j=0;j<9;j++)
+        	 for(int i=0;i<8;i++)
+        	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
+        		 g.drawRect(tlx+j*width,tly+i*h, width, h);
+	             Centre(Matrix[i][j],width,tlx+j*width,tly+i*h+downshift,g);
+	           }
+	  
+       
+       // Now print Remark
+      
+       g.drawRect(tlx,tly+8*h,2*width, h);
+       Centre("Remarks",2*width,tlx,tly+8*h+downshift,g);
+       tlx=tlx+2*width;
+       g.drawRect(tlx,tly+8*h,2*width, h);
+       Centre(Remark,2*width,tlx,tly+8*h+downshift,g);
+       
+       tly=tly+230;
+       g.drawString("NOTE  :  This marksheet has been prepared as per the instruction circular No 6987, dated 04/11/2009 issued by",leftmargin,tly);
+       tly=tly+15;
+       g.drawString("               Secretary, Maharashtra State Board of Secondary and Higher Secondary Education, Pune 411004",leftmargin,tly);
+	
+       return PAGE_EXISTS;
+	 }
+	
+	
+	
+	public int PrintPasses(Graphics g, PageFormat pf, int pageno)
+			throws PrinterException
+	{ 
+		/* half A4 size
+    Paper paper = pf.getPaper();
+    pf.setOrientation(PageFormat.PORTRAIT);
+    paper.setSize(8*72,5*72);
+    pf.setPaper(paper);
+		  */
+		
+		           ///strArray.size()-2
+		 if (pageno>TotalPrintPages)    // MultipageDoc 'page no' is zero-based
+		    {  return NO_SUCH_PAGE;  // After NO_SUCH_PAGE, printer will stop printing.
+	        }
+		 
+		// OneStudent=strArray.get(pageno+1);
+		 // show(OneStudent);
+	    
+		 FillMatrix(intPasses.get(pageno));
+	    
+		 int w[]={63,38,38,38,38,38,38,38,38,38,38,68};
+		 int ws[]={83,38,38};
 		 
 		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,9);
 		 
@@ -1392,8 +1368,9 @@ SetPrinter sp;
 	     g.setFont(MyFont);
      
 	     
-	     g.drawString("Mark Sheet showing the number of marks Obtained by  " +NameField.getText().trim() ,tlxstatic,tly-40);
-	     g.drawString("Roll : "+Roll.trim() +"  Div : "+DiviField.getText()+" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
+	     g.drawString("Mark Sheet showing the number of marks Obtained by  ",tlxstatic,tly-60);
+	     g.drawString(NameField.getText().trim()+"    Roll : "+Roll.trim()+"   Div : "+DiviField.getText(),tlxstatic,tly-40);
+	     g.drawString(" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
 	    
 	     //// Other routine table parts here
 	     
@@ -1428,8 +1405,18 @@ SetPrinter sp;
        g.drawRect(tlx,tly+8*h,2*width, h);
        Centre(Remark,2*width,tlx,tly+8*h+downshift,g);
       
+       
+       tly=tly+230;
+       g.drawString("NOTE  :  This marksheet has been prepared as per the instruction circular No 6987, dated 04/11/2009 issued by",leftmargin,tly);
+       tly=tly+15;
+       g.drawString("               Secretary, Maharashtra State Board of Secondary and Higher Secondary Education, Pune 411004",leftmargin,tly);
+       
 		return PAGE_EXISTS;
 	 }
+
+	
+	
+	
 ///// Here the JAVA Printing Mechanism Ends
 /////////////////////////////////////////////////
 ///////////////////////////////////////////////
@@ -1505,5 +1492,156 @@ SetPrinter sp;
             fb.replace(offset, length, text.toUpperCase(), attrs);
         }
     }
+    
+    void Mod()
+    {if(strArray.size()==0) { show("No Data"); return;}
+    strModSci.removeAll(strModSci);
+    strModCom.removeAll(strModCom);
+    String plate;
+    int totalrecords=strArray.size();
+    for(int i=0;i<totalrecords;i++) 
+    { FillMatrix(i);
+      if(!Remark.contains("FAIL")) continue;
+      FillDistance();
+      ShowMatrix();
+      plate=String.format("%4d : ",dist);
+     plate=plate+"Roll :"+Roll+" = ";
+     String tmpstr="";
+     for(int j=3;j<9;j++)
+        { plate+="[";
+          plate=plate+table2.getColumnModel().getColumn(j).getHeaderValue();         ///subject name
+          tmpstr=(String) GetData(8,j);
+          if(tmpstr.length()==0) tmpstr="00";
+          if(tmpstr.length()==1) tmpstr+=" ";
+          plate=plate+"-"+tmpstr+"] "; /// moderation level per subject
+        }
+   //if(i>1400) show(plate);
+      if(plate.contains("PHY")) strModSci.add(plate);
+      if(plate.contains("OCM")) strModCom.add(plate);
+    
+    }
+    
+   Collections.sort(strModSci);
+   Collections.sort(strModCom);
+   SaveReport("Moderation");
+
+    	
+    }
+ 
+    
+    void Stat()
+    {
+    	if(strArray.size()==0) { show("No Data"); return;}
+        int sci=0,sciFA=0,sciPR=0,sciPA=0,sciG3=0,sciG2=0,sciG1=0;
+        int com=0,comFA=0,comPR=0,comPA=0,comG3=0,comG2=0,comG1=0;
+        
+       	
+        String temp;
+        for(int i=0;i<strArray.size();i++)
+        {  
+       	temp=strArray.get(i);
+       	FillMatrix(i);
+       	if(temp.contains("PHY:"))
+       	{   sci++;
+       	    if(Remark=="FAIL") sciFA++;
+       	    if(Remark=="PROMOTED") sciPR++;
+       	    if(Remark=="Grade Pass") sciPA++;
+       	    if(Remark=="Grade III") sciG3++;
+       	    if(Remark=="Grade II") sciG2++;
+       	    if(Remark=="Grade I") sciG1++;
+       	}
+       	else
+       	{  com++;
+       	   if(Remark=="FAIL") comFA++;
+   	       if(Remark=="PROMOTED") comPR++;
+   	       if(Remark=="Grade Pass") comPA++;
+   	       if(Remark=="Grade III") comG3++;
+   	       if(Remark=="Grade II") comG2++;
+   	       if(Remark=="Grade I") comG1++;
+       		
+       	}
+       	
+        }
+        
+       String plate;
+        plate=String.format("Commerce  :  \n\nGrade I : %d\nGrade II : %d\nGrade III : %d\nGrade PASS : %d\nPROMOTED : %d\nPASS : %d\nFAIL : %d\nTotal : %d\n\n"+
+       		 "Science  :  \n\nGrade I : %d\nGrade II : %d\nGrade III : %d\nGrade PASS : %d\nPROMOTED : %d\nPASS : %d\nFAIL : %d\nTotal : %d\n\n"
+        					 ,comG1,comG2,comG3,comPA,comPR,com-comFA,comFA,com,sciG1,sciG2,sciG3,sciPA,sciPR,sci-sciFA,sciFA,sci);
+        show(plate);
+
+    }
+    void Merit()
+    {	
+    	  if(strArray.size()==0) { show("No Data"); return;}
+          strModSci.removeAll(strModSci);
+          strModCom.removeAll(strModCom);
+          String plate,subtitles;
+          int totalrecords=strArray.size();
+          for(int i=0;i<totalrecords;i++) 
+          { FillMatrix(i);
+            if(Remark.contains("FAIL")) continue;
+           ShowMatrix();
+           plate=String.format("GT : %4d  ",GT1200);
+           plate=plate+"Roll :"+Roll;
+           subtitles="";
+           for(int j=3;j<9;j++)
+           {
+             subtitles=subtitles+table2.getColumnModel().getColumn(j).getHeaderValue();         ///subject name
+             subtitles+="=";
+            
+           }
+           
+            if(subtitles.contains("PHY")) strModSci.add(plate);
+            if(subtitles.contains("OCM")) strModCom.add(plate);
+          
+          }
+          
+         Collections.sort(strModSci);
+         Collections.sort(strModCom);
+         SaveReport("Merit");
+      
+    }
+    
+  void SaveEmptyNames()
+   {
+	   if(strArray.size()==0) { show("No Data"); return;}
+       strModSci.removeAll(strModSci); ///reuse mod
+     
+       
+      
+   	String tempstr;
+       String temp[];
+       int TotalRolls=strArray.size();
+      
+       for(int i=0;i<TotalRolls;i++)
+       { tempstr=strArray.get(i);
+         temp=tempstr.split("#");
+          
+        if(temp[1].length()<30) strModSci.add(temp[0]); ///no name found
+      	
+      
+      	 }
+       
+       File f = new File(System.getProperty("java.class.path"));
+   	File dir = f.getAbsoluteFile().getParentFile();
+   	String path = dir.toString();
+   	
+   	fylename=path+"/Empty Names - List.txt";
+ 	  	
+ 	     FileWriter f0=null;
+ 		 try {f0 = new FileWriter(fylename);	} catch (IOException e1) {e1.printStackTrace();	}
+ 	     String newLine = System.getProperty("line.separator");
+ 	       	     
+ 	     for(int i=0;i<strModSci.size();i++)
+ 	     {   
+ 	         try { f0.write(strModSci.get(i));	} catch (IOException e) {e.printStackTrace();	}
+ 	        try { f0.write(newLine);	} catch (IOException e) {e.printStackTrace();	}  
+          }
+ 	     try {f0.close();} catch (IOException e) {e.printStackTrace();}
+    
+ 	    toast.AutoCloseMsg("Saved Empty Names");
+   }
+    
+  
     
 }
