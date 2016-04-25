@@ -20,7 +20,7 @@ public class Options
     { 
 		int mc = JOptionPane.QUESTION_MESSAGE;
 
-		String[] opts = {"Cancel", "Empty Names", "Merit", "Mod", "Stat"};
+		String[] opts = {"Cancel","Print Consolidated","Empty Names", "Merit", "Mod", "Stat"};
 		
 		int ch = JOptionPane.showOptionDialog (null, "Choose Option", "More Options", 0, mc, null, opts, opts[0]); 
 		return ch;

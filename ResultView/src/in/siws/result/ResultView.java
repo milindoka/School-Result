@@ -39,6 +39,7 @@ public class ResultView extends JFrame implements Printable
 	static String fylename="";
     int grandtotal=0;	
     int GT1200=0;
+    int GT650=0;
     int TotalPrintPages=0;
     int startpageindex=0,endpageindex=0;
     JTextField NameField;
@@ -102,7 +103,7 @@ int subindex=0;
 ///This is sample data from mobile mark list application
 
 
-String Order[]={"ENG","MAR","TAM","HIN","ITE","MAT","PHY","CHE","BIO","SEP","ECO","BKE","OCM","EVS","PTE","CS1","CS2","EL1","EL2"};
+String Order[]={"ENG","MAR","TAM","HIN","ITE","MAT","PHY","CHE","BIO","SEP","ECO","BKE","OCM","CS1","CS2","EL1","EL2","EVS","PTE"};
 String Row[]={"T1","T2","U1","U2"};
 public int currentindex=0;
 boolean found;
@@ -688,10 +689,11 @@ Options op;
             	
             	switch (option)
             	{case 0 : break;
-            	 case 1 : SaveEmptyNames();break;
-            	 case 2 : Merit(); break;
-            	 case 3 : Mod();   break;
-            	 case 4 : Stat();  break;
+            	 case 1 : PrintConsolidatedResult();break;
+            	 case 2 : SaveEmptyNames(); break;
+            	 case 3 : Merit();   break;
+            	 case 4 : Mod();  break;
+            	 case 5 : Stat();
             	 default : break;
             	}
             }
@@ -952,6 +954,7 @@ Options op;
       
      ////Fill 8th column
       GT1200=0;
+      GT650=0;
       String plate;
       Matrix[0][8]="Total";Matrix[0][7]="PTE";
       for (int i=1; i<5;i++) { GT1200=GT1200+grand[i];
@@ -963,12 +966,12 @@ Options op;
       Matrix[5][8]=plate;
       int avgtotal=0; 
       for (int i=0; i<6;i++)  avgtotal=avgtotal+average[i]; 
-      
+      GT650=avgtotal+evs;
       plate=String.format("%d/650",avgtotal+evs);
       Matrix[6][8]=plate;
       
       Matrix[6][6]=Matrix[2][6];
-      if(Matrix[2][7].contains("01")) Matrix[6][7]="A"; else Matrix[6][7]="C";
+      if(Matrix[2][7].contains("03")) Matrix[6][7]="A"; else Matrix[6][7]="C";
       if(Matrix[2][7].contains("02")) Matrix[6][7]="B";
         
       Matrix[2][6]=Matrix[2][7]=Matrix[5][6]=Matrix[5][7]=Matrix[7][6]=Matrix[7][7]="";
@@ -1257,14 +1260,7 @@ Options op;
 	public int PrintResults(Graphics g, PageFormat pf, int pageno)
 			throws PrinterException
 	{ 
-		/* half A4 size
-    Paper paper = pf.getPaper();
-    pf.setOrientation(PageFormat.PORTRAIT);
-    paper.setSize(8*72,5*72);
-    pf.setPaper(paper);
-		  */
-		
-		           ///strArray.size()-2
+	
 		 if (pageno>TotalPrintPages)    // MultipageDoc 'page no' is zero-based
 		    {  return NO_SUCH_PAGE;  // After NO_SUCH_PAGE, printer will stop printing.
 	        }
@@ -1415,27 +1411,116 @@ Options op;
 	 }
 
 	
-	
-	
-///// Here the JAVA Printing Mechanism Ends
-/////////////////////////////////////////////////
-///////////////////////////////////////////////
+		
 
+	public int PrintConsolidated(Graphics g, PageFormat pf, int pageno)
+    {
+		
+		 if (pageno>TotalPrintPages)    // MultipageDoc 'page no' is zero-based
+		    {  return NO_SUCH_PAGE;  // After NO_SUCH_PAGE, printer will stop printing.
+	        }
 	
-
-	public int PrintConsolidated(Graphics g, PageFormat pf, int page)
-    {  if (page > 0)
-                { /* We have only one page, and 'page' is zero-based */
-    	              
-                    return NO_SUCH_PAGE;
-                  }
-
+		 int w[]={63,38,38,38,38,38,38,38,38,38,38,68};
+		 int ws[]={83,38,38};
+		 int width=w[2]; ///same width for all 6 subjects
+		 int tlxstatic=60;
+		 int tlx=leftmargin,tly=60;
+		 int h=20,downshift=13;
+		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,9);
+		 g.setFont(MyFont);
+		 
+		 // First Student On Page
+	    
+		 FillMatrix(startpageindex+pageno*2);
+	     /// 72 dots per inch, leave left & top margin 1 inch each 
+		 /// on actual paper, printer also leaves some margin
+	     g.drawString(NameField.getText().trim()+"    Roll : "+Roll.trim()+"   Div : "+DiviField.getText()+" ("+Strim+") Year : "+AY,tlxstatic,tly-20);
+	     //g.drawString(" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
+	    
+	     //// Other routine table parts here
+	     for(int i=0;i<8;i++)
+	       { tlxstatic=60;
+	    	 for(int j=0;j<3;j++)
+	         {   g.drawRect(tlxstatic,tly+i*h,ws[j],h);
+	    		 Centre(StaticMatrix[i][j],ws[j],tlxstatic,tly+i*h+downshift,g);
+	    		 tlxstatic=tlxstatic+ws[j];
+	         }
+	     
+	         }
+	  tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
+	      for(int j=0;j<9;j++)
+     	 for(int i=0;i<8;i++)
+     	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
+     		 g.drawRect(tlx+j*width,tly+i*h, width, h);
+	             Centre(Matrix[i][j],width,tlx+j*width,tly+i*h+downshift,g);
+	           }
+	  
+    // Now print Remark
+   
+    g.drawRect(tlx,tly+8*h,2*width, h);
+    Centre("Remarks",2*width,tlx,tly+8*h+downshift,g);
+    tlx=tlx+2*width;
+    g.drawRect(tlx,tly+8*h,2*width, h);
+    Centre(Remark,2*width,tlx,tly+8*h+downshift,g);
+    
+    ///////////Shift Down For Second Student
+    
+    tly=tly+240;
+    
+    /////Second Result on Same Page
+    
+	 FillMatrix(startpageindex+pageno*2+1);
+	 
 	
-	return PAGE_EXISTS;
+	 tlx=leftmargin;
+     tlxstatic=60;
+    /// 72 dots per inch, leave left & top margin 1 inch each 
+	 /// on actual paper, printer also leaves some margin
+  
+    g.drawString(NameField.getText().trim()+"    Roll : "+Roll.trim()+"   Div : "+DiviField.getText(),tlxstatic,tly-40);
+    g.drawString(" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
+   
+    //// Other routine table parts here
+    
+    
+    for(int i=0;i<8;i++)
+      { tlxstatic=60;
+   	 for(int j=0;j<3;j++)
+        {   g.drawRect(tlxstatic,tly+i*h,ws[j],h);
+   		 Centre(StaticMatrix[i][j],ws[j],tlxstatic,tly+i*h+downshift,g);
+   		 tlxstatic=tlxstatic+ws[j];
+        }
+    
+        }
+    
+   
+ tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
+  for(int j=0;j<9;j++)
+	 for(int i=0;i<8;i++)
+	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
+		 g.drawRect(tlx+j*width,tly+i*h, width, h);
+            Centre(Matrix[i][j],width,tlx+j*width,tly+i*h+downshift,g);
+          }
+ 
+
+// Now print Remark
+
+g.drawRect(tlx,tly+8*h,2*width, h);
+Centre("Remarks",2*width,tlx,tly+8*h+downshift,g);
+tlx=tlx+2*width;
+g.drawRect(tlx,tly+8*h,2*width, h);
+Centre(Remark,2*width,tlx,tly+8*h+downshift,g);
+    
+	
+    return PAGE_EXISTS;
+
     }	
 
 
     
+///// End of JAVA Printing Functions
+/////////////////////////////////////////////////
+///////////////////////////////////////////////
     
     
     
@@ -1528,6 +1613,14 @@ Options op;
     	
     }
  
+    void PrintConsolidatedResult()
+    {TotalPrintPages=3;
+     startpageindex=0;
+     PrintResultCard(3);
+    	
+    }
+    
+    
     
     void Stat()
     {
@@ -1581,7 +1674,7 @@ Options op;
           { FillMatrix(i);
             if(Remark.contains("FAIL")) continue;
            ShowMatrix();
-           plate=String.format("GT : %4d  ",GT1200);
+           plate=String.format("GT : %4d  ",GT650);
            plate=plate+"Roll :"+Roll;
            subtitles="";
            for(int j=3;j<9;j++)
