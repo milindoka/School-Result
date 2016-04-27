@@ -483,6 +483,7 @@ public class MRKaddtodb implements Printable
    	//	String ll = temp[1].replaceAll("[^a-zA-Z0-9\\s]", "");
  	    	//if(ll.length()<3) continue;
  	    //	show(ll.length());
+   		// show(temp[0]);
    		if (!IsMarks_OR_AB(temp[1])) continue;
    	 	    int rrr=Integer.parseInt(temp[0].replaceAll("[^0-9.]",""));
 	        String   sss=String.format("%5d",rrr);  
@@ -559,8 +560,8 @@ public class MRKaddtodb implements Printable
             stt.execute("DROP TABLE IF EXISTS marklist");
             stt.execute("CREATE TABLE marklist (" +
                     "id BIGINT NOT NULL AUTO_INCREMENT,"
-                    + "RollNo VARCHAR(100),"
-                    + "Score VARCHAR(400),"
+                    + "RollNo VARCHAR(200),"
+                    + "Score VARCHAR(600),"
                     + "PRIMARY KEY(id)"
                     + ")");
             

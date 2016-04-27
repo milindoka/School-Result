@@ -495,8 +495,9 @@ public int ReplaceDialog()
 				
 				String subcode=DivField.getText()+"="+ExamField.getText()+"="+SubField.getText();
 			  int success=MRKaddtodb.FillMainList(subcode);
+			  
 			  if(success==0) 
-			  { if(fileindex>TotalFiles) {     show("Over1");   return;}
+			  { if(fileindex>TotalFiles) {     show("Error 01");   return;}
 				
 			  int option=ReplaceDialog();
 			  if(option==0){ MoveToRejected(); ProcessLists();  }
@@ -530,6 +531,7 @@ public int ReplaceDialog()
 			    SetData(subcode,TotalReceived,1 );
 			    
 			    TotalReceived++;
+			    
 			    MoveToAccepted();
 			     
 			    if(TotalReceived>5) 

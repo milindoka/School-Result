@@ -1424,8 +1424,8 @@ Options op;
 		 int ws[]={83,38,38};
 		 int width=w[2]; ///same width for all 6 subjects
 		 int tlxstatic=60;
-		 int tlx=leftmargin,tly=60;
-		 int h=20,downshift=13;
+		 int tlx=leftmargin,tly=35;
+		 int h=15,downshift=10;
 		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,9);
 		 g.setFont(MyFont);
 		 
@@ -1434,9 +1434,10 @@ Options op;
 		 FillMatrix(startpageindex+pageno*2);
 	     /// 72 dots per inch, leave left & top margin 1 inch each 
 		 /// on actual paper, printer also leaves some margin
-	     g.drawString(NameField.getText().trim()+"    Roll : "+Roll.trim()+"   Div : "+DiviField.getText()+" ("+Strim+") Year : "+AY,tlxstatic,tly-20);
-	     //g.drawString(" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
-	    
+	     g.drawString(NameField.getText().trim(),tlxstatic,tly);
+	     tly=tly+h;
+	     g.drawString("Roll : "+Roll.trim()+"   Div : "+DiviField.getText()+" ("+Strim+") Year : "+AY,tlxstatic,tly);
+	     tly=tly+h;
 	     //// Other routine table parts here
 	     for(int i=0;i<8;i++)
 	       { tlxstatic=60;
@@ -1465,7 +1466,7 @@ Options op;
     
     ///////////Shift Down For Second Student
     
-    tly=tly+240;
+    tly=tly+150;
     
     /////Second Result on Same Page
     
@@ -1477,32 +1478,30 @@ Options op;
     /// 72 dots per inch, leave left & top margin 1 inch each 
 	 /// on actual paper, printer also leaves some margin
   
-    g.drawString(NameField.getText().trim()+"    Roll : "+Roll.trim()+"   Div : "+DiviField.getText(),tlxstatic,tly-40);
-    g.drawString(" in each head of passing at FYJC ("+Strim+") class in the examination conducted during the academic Year "+ AY,tlxstatic,tly-20);
-   
-    //// Other routine table parts here
-    
-    
-    for(int i=0;i<8;i++)
-      { tlxstatic=60;
-   	 for(int j=0;j<3;j++)
-        {   g.drawRect(tlxstatic,tly+i*h,ws[j],h);
-   		 Centre(StaticMatrix[i][j],ws[j],tlxstatic,tly+i*h+downshift,g);
-   		 tlxstatic=tlxstatic+ws[j];
-        }
-    
-        }
-    
-   
- tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
-  for(int j=0;j<9;j++)
-	 for(int i=0;i<8;i++)
-	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
-		 g.drawRect(tlx+j*width,tly+i*h, width, h);
-            Centre(Matrix[i][j],width,tlx+j*width,tly+i*h+downshift,g);
-          }
- 
-
+     /// 72 dots per inch, leave left & top margin 1 inch each 
+	 /// on actual paper, printer also leaves some margin
+     g.drawString(NameField.getText().trim(),tlxstatic,tly);
+     tly=tly+h;
+     g.drawString("Roll : "+Roll.trim()+"   Div : "+DiviField.getText()+" ("+Strim+") Year : "+AY,tlxstatic,tly);
+     tly=tly+h;
+     //// Other routine table parts here
+     for(int i=0;i<8;i++)
+       { tlxstatic=60;
+    	 for(int j=0;j<3;j++)
+         {   g.drawRect(tlxstatic,tly+i*h,ws[j],h);
+    		 Centre(StaticMatrix[i][j],ws[j],tlxstatic,tly+i*h+downshift,g);
+    		 tlxstatic=tlxstatic+ws[j];
+         }
+     
+         }
+  tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
+      for(int j=0;j<9;j++)
+ 	 for(int i=0;i<8;i++)
+ 	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
+ 		 g.drawRect(tlx+j*width,tly+i*h, width, h);
+             Centre(Matrix[i][j],width,tlx+j*width,tly+i*h+downshift,g);
+           }
+  
 // Now print Remark
 
 g.drawRect(tlx,tly+8*h,2*width, h);
@@ -1614,7 +1613,7 @@ Centre(Remark,2*width,tlx,tly+8*h+downshift,g);
     }
  
     void PrintConsolidatedResult()
-    {TotalPrintPages=3;
+    {TotalPrintPages=1;
      startpageindex=0;
      PrintResultCard(3);
     	
