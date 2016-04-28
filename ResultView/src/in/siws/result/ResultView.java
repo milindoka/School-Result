@@ -1429,15 +1429,18 @@ Options op;
 		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,9);
 		 g.setFont(MyFont);
 		 
-		 // First Student On Page
+		 // Four Students Per Page
+	    for (int k=0;k<4;k++)
+	    	
 	    
-		 FillMatrix(startpageindex+pageno*2);
+	    {  tlx=leftmargin;tlxstatic=60;
+		   FillMatrix(startpageindex+pageno*4+k); ///////
 	     /// 72 dots per inch, leave left & top margin 1 inch each 
 		 /// on actual paper, printer also leaves some margin
 	     g.drawString(NameField.getText().trim(),tlxstatic,tly);
 	     tly=tly+h;
 	     g.drawString("Roll : "+Roll.trim()+"   Div : "+DiviField.getText()+" ("+Strim+") Year : "+AY,tlxstatic,tly);
-	     tly=tly+h;
+	     tly=tly+h-5;
 	     //// Other routine table parts here
 	     for(int i=0;i<8;i++)
 	       { tlxstatic=60;
@@ -1448,7 +1451,7 @@ Options op;
 	         }
 	     
 	         }
-	  tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
+	     tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
 	      for(int j=0;j<9;j++)
      	 for(int i=0;i<8;i++)
      	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
@@ -1468,52 +1471,11 @@ Options op;
     
     tly=tly+150;
     
-    /////Second Result on Same Page
+   }/////End of for loop k=0
     
-	 FillMatrix(startpageindex+pageno*2+1);
-	 
-	
-	 tlx=leftmargin;
-     tlxstatic=60;
-    /// 72 dots per inch, leave left & top margin 1 inch each 
-	 /// on actual paper, printer also leaves some margin
-  
-     /// 72 dots per inch, leave left & top margin 1 inch each 
-	 /// on actual paper, printer also leaves some margin
-     g.drawString(NameField.getText().trim(),tlxstatic,tly);
-     tly=tly+h;
-     g.drawString("Roll : "+Roll.trim()+"   Div : "+DiviField.getText()+" ("+Strim+") Year : "+AY,tlxstatic,tly);
-     tly=tly+h;
-     //// Other routine table parts here
-     for(int i=0;i<8;i++)
-       { tlxstatic=60;
-    	 for(int j=0;j<3;j++)
-         {   g.drawRect(tlxstatic,tly+i*h,ws[j],h);
-    		 Centre(StaticMatrix[i][j],ws[j],tlxstatic,tly+i*h+downshift,g);
-    		 tlxstatic=tlxstatic+ws[j];
-         }
-     
-         }
-  tlx=leftmargin+w[0]+w[1]+w[2]; ////shift to prime part
-      for(int j=0;j<9;j++)
- 	 for(int i=0;i<8;i++)
- 	   { if(Remark!="PROMOTED" && i==7) Matrix[i][j]="";
- 		 g.drawRect(tlx+j*width,tly+i*h, width, h);
-             Centre(Matrix[i][j],width,tlx+j*width,tly+i*h+downshift,g);
-           }
-  
-// Now print Remark
-
-g.drawRect(tlx,tly+8*h,2*width, h);
-Centre("Remarks",2*width,tlx,tly+8*h+downshift,g);
-tlx=tlx+2*width;
-g.drawRect(tlx,tly+8*h,2*width, h);
-Centre(Remark,2*width,tlx,tly+8*h+downshift,g);
-    
-	
     return PAGE_EXISTS;
 
-    }	
+  }	
 
 
     
