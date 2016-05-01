@@ -442,7 +442,8 @@ Options op;
         {
 
             public void actionPerformed(ActionEvent arg0) 
-            { String temp[],temp1[];
+            { 
+            String temp[],temp1[];
               intPasses.removeAll(intPasses);
             //JTextField yField = new JTextField(10);
 
@@ -971,7 +972,7 @@ Options op;
       Matrix[6][8]=plate;
       
       Matrix[6][6]=Matrix[2][6];
-      if(Matrix[2][7].contains("03")) Matrix[6][7]="A"; else Matrix[6][7]="C";
+      if(Matrix[2][7].contains("01")) Matrix[6][7]="A"; else Matrix[6][7]="C";
       if(Matrix[2][7].contains("02")) Matrix[6][7]="B";
         
       Matrix[2][6]=Matrix[2][7]=Matrix[5][6]=Matrix[5][7]=Matrix[7][6]=Matrix[7][7]="";
@@ -1416,7 +1417,7 @@ Options op;
 	public int PrintConsolidated(Graphics g, PageFormat pf, int pageno)
     {
 		
-		 if (pageno>TotalPrintPages)    // MultipageDoc 'page no' is zero-based
+		 if (pageno>=TotalPrintPages)    // MultipageDoc 'page no' is zero-based
 		    {  return NO_SUCH_PAGE;  // After NO_SUCH_PAGE, printer will stop printing.
 	        }
 	
@@ -1428,12 +1429,15 @@ Options op;
 		 int h=15,downshift=10;
 		 Font MyFont = new Font("Liberation Serif", Font.PLAIN,9);
 		 g.setFont(MyFont);
-		 
+	
+		 Centre("S.I.W.S.N.R Swamy College of Commerce & Econocmics",500,tlxstatic,tly,g);
+		 tly=tly+h;
+		 Centre("Junior College",500,tlxstatic,tly,g);
+		 tly=tly+h;
 		 // Four Students Per Page
 	    for (int k=0;k<4;k++)
-	    	
-	    
 	    {  tlx=leftmargin;tlxstatic=60;
+	       if(startpageindex+pageno*4+k>endpageindex) continue;
 		   FillMatrix(startpageindex+pageno*4+k); ///////
 	     /// 72 dots per inch, leave left & top margin 1 inch each 
 		 /// on actual paper, printer also leaves some margin
@@ -1472,7 +1476,10 @@ Options op;
     tly=tly+150;
     
    }/////End of for loop k=0
-    
+    ///Print Footer
+	    g.drawString("Exam Dept",60,810);
+	    g.drawString("Principal/Vice-Principal",450,810);
+	    
     return PAGE_EXISTS;
 
   }	
@@ -1575,8 +1582,39 @@ Options op;
     }
  
     void PrintConsolidatedResult()
-    {TotalPrintPages=1;
-     startpageindex=0;
+    {String temp[],temp1[];
+   // intPasses.removeAll(intPasses);
+  //JTextField yField = new JTextField(10);
+
+  JPanel myPanel = new JPanel();
+//  JCheckBox checkbox = new JCheckBox("Only Non-Failures");
+  //String message = "Are you sure you want to disconnect the selected products?";
+//  boolean dontShow = checkbox.isSelected();
+  
+  //myPanel.add(checkbox);
+	  String Range = JOptionPane.showInputDialog(null,myPanel);
+	  temp1=Range.split("-");
+	//  printpass=checkbox.isSelected();
+	//  if(checkbox.isSelected()) show("selected"); else show("non-selected");
+	  
+	  startpageindex=endpageindex=TotalPrintPages=0;
+	 for(int i=0;i<strArray.size();i++)
+	  { temp=strArray.get(i).split("#");
+		if(temp[0].contains(temp1[0])) {startpageindex=i;break;} 
+    }
+	 
+	 for(int i=0;i<strArray.size();i++)
+	      { temp=strArray.get(i).split("#");
+		    if(temp[0].contains(temp1[1])) {endpageindex=i;break;} 
+    }
+	
+	 
+//  show(startpageindex);show(endpageindex);	 
+	 
+	if(startpageindex<=endpageindex) TotalPrintPages=(endpageindex-startpageindex+1)/4;
+	else {show("Error In Range"); return;}
+    if((endpageindex-startpageindex+1)%4!=0) TotalPrintPages++;
+     show(TotalPrintPages);
      PrintResultCard(3);
     	
     }
