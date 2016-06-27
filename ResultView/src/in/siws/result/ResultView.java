@@ -694,6 +694,7 @@ Options op;
             	 case 4 : Mod();  break;
             	 case 5 : Stat(); break;
             	 case 6 : FList(); break;
+            	 case 7 : SubMerit("MAT");
             	 default : break;
             	}
             }
@@ -1724,6 +1725,44 @@ Options op;
          SaveReport("Merit");
       
     }
+    
+    
+    void SubMerit(String subname)
+    {	
+    	  if(strArray.size()==0) { show("No Data"); return;}
+          strModSci.removeAll(strModSci);
+          strModCom.removeAll(strModCom);
+          String plate,subtitles;
+          int totalrecords=strArray.size();
+          for(int i=0;i<totalrecords;i++) 
+          { FillMatrix(i);
+            if(Remark.contains("FAIL")) continue;
+           ShowMatrix();
+           subtitles="";
+           int index=-1; /// assume sub not found
+           String tempsub;
+           for(int j=3;j<9;j++)
+           { tempsub=(String) table2.getColumnModel().getColumn(j).getHeaderValue();
+             subtitles=subtitles+ tempsub;   ///subject name
+             subtitles=subtitles+"=";
+             if(tempsub.contains(subname)) index=j-3;           
+           }
+           if(index==-1) continue;
+           plate=String.format("%s : %4d  ",subname,subtotal[index]);
+           plate=plate+"Roll :"+Roll+" - " + NameField.getText();
+           
+            if(subtitles.contains("PHY")) strModSci.add(plate);
+            if(subtitles.contains("OCM")) strModCom.add(plate);
+          
+          
+        }    
+          
+         Collections.sort(strModSci);
+         Collections.sort(strModCom);
+         SaveReport("Sub - Merit - "+subname);
+      
+    }
+    
     
   void SaveEmptyNames()
    {
