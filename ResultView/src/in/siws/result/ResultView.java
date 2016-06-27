@@ -88,23 +88,21 @@ String Remark;
 
 String StaticMatrix[][]={ 
 		        {"Examination","Max","Min"},
-                {"Terminal-I  (A)","50",""},
-                {"Terminal-II (B)","100",""},
-                {"Unit Test-I (C)","25",""},
-                {"Unit Test-II(C)","25",""},                              
+		        {"Unit Test-I (A)","25",""},
+                {"Terminal-I  (B)","50",""},
+                {"Unit Test-II(C)","25",""},
+                {"Terminal-II (D)","100",""},                         
                 {"Aggregate (A+B+C)","200","70"},
                 {"Average (A+B+C)/2","100","35"},
                 {"Grace","30",""}                             
                }; ////3 rows 8 columns
 
-
-
 int subindex=0;
-///This is sample data from mobile mark list application
+
 
 
 String Order[]={"ENG","MAR","TAM","HIN","ITE","MAT","PHY","CHE","BIO","SEP","ECO","BKE","OCM","CS1","CS2","EL1","EL2","EVS","PTE"};
-String Row[]={"T1","T2","U1","U2"};
+String Row[]={"U1","T1","U2","T2"};
 public int currentindex=0;
 boolean found;
 
@@ -694,7 +692,8 @@ Options op;
             	 case 2 : SaveEmptyNames(); break;
             	 case 3 : Merit();   break;
             	 case 4 : Mod();  break;
-            	 case 5 : Stat();
+            	 case 5 : Stat(); break;
+            	 case 6 : FList(); break;
             	 default : break;
             	}
             }
@@ -915,21 +914,23 @@ Options op;
 	                subtotal[subindex]=subtotal[subindex]+strtointeger;
 	                
 	                //show(subtotal[subindex]);
+	                if(temp[j].contains("U1")) { Matrix[1][subindex]=marks[1]; grand[1]=grand[1]+strtointeger;}
 	                
-	                if(temp[j].contains("T1")) { Matrix[1][subindex]=marks[1]; grand[1]=grand[1]+strtointeger;} 
+	                if(temp[j].contains("T1")) { Matrix[2][subindex]=marks[1]; grand[2]=grand[2]+strtointeger;} 
+	                if(temp[j].contains("U2")) { Matrix[3][subindex]=marks[1]; grand[3]=grand[3]+strtointeger;}
 	                if(temp[j].contains("T2")) { 
 	                	                        int original=0;
-	                	                        if(Matrix[2][subindex]!="")
-	                	                        original=Integer.parseInt(Matrix[2][subindex].replaceAll("[^0-9.]",""));
+	                	                        if(Matrix[4][subindex]!="")
+	                	                        original=Integer.parseInt(Matrix[4][subindex].replaceAll("[^0-9.]",""));
 	                                            original=original+strtointeger;
 	                                            if(!temp[j].contains("EVS") && !temp[j].contains("PTE"))
-	                                            grand[2]=grand[2]+strtointeger;
+	                                            grand[4]=grand[4]+strtointeger;
 	                                            if(temp[j].contains("EVS")) evs=strtointeger;     
 	                                            String plate00=String.format("%02d",original);
-	                	                        Matrix[2][subindex]=plate00;
+	                	                        Matrix[4][subindex]=plate00;
 	                                            }
-	                if(temp[j].contains("U1")) { Matrix[3][subindex]=marks[1]; grand[3]=grand[3]+strtointeger;}
-	                if(temp[j].contains("U2")) { Matrix[4][subindex]=marks[1]; grand[4]=grand[4]+strtointeger;}
+	               
+	                
 	    	      }
 	    	  }
 	    	 
@@ -971,12 +972,13 @@ Options op;
       plate=String.format("%d/650",avgtotal+evs);
       Matrix[6][8]=plate;
       
-      Matrix[6][6]=Matrix[2][6];
-      if(Matrix[2][7].contains("01")) Matrix[6][7]="A"; else Matrix[6][7]="C";
-      if(Matrix[2][7].contains("02")) Matrix[6][7]="B";
+      Matrix[6][6]=Matrix[4][6];
+      if(Matrix[4][7].contains("03")) Matrix[6][7]="A";
+      else
+    	  {if(Matrix[4][7].contains("02")) Matrix[6][7]="B"; else  Matrix[6][7]="C"; }
         
-      Matrix[2][6]=Matrix[2][7]=Matrix[5][6]=Matrix[5][7]=Matrix[7][6]=Matrix[7][7]="";
-      
+     Matrix[2][6]=Matrix[2][7]=Matrix[5][6]=Matrix[5][7]=Matrix[7][6]=Matrix[7][7]="";
+     Matrix[4][6]=Matrix[4][7]=""; ///Remove EVS and PTE From 4th Row  
       
       
       if (gracecount>3 || gracetotal>30) { Remark="FAIL"; return; }
@@ -1619,6 +1621,35 @@ Options op;
     	
     }
     
+    void FList()
+    {  if(strArray.size()==0) { show("No Data"); return;}
+       strModSci.removeAll(strModSci);
+       strModCom.removeAll(strModCom);
+       String plate,subtitles;
+       int totalrecords=strArray.size();
+       for(int i=0;i<totalrecords;i++) 
+         { FillMatrix(i);
+           if(!Remark.contains("FAIL")) continue; ///
+           ShowMatrix();
+           plate=String.format("Roll : %-4s  Div : %s  Name : %s",Roll.trim(),DiviField.getText(),NameField.getText().trim());
+     subtitles="";
+     for(int j=3;j<9;j++)
+     {
+       subtitles=subtitles+table2.getColumnModel().getColumn(j).getHeaderValue();         ///subject name
+       subtitles+="=";
+      
+     }
+     
+      if(subtitles.contains("PHY")) strModSci.add(plate);
+      if(subtitles.contains("OCM")) strModCom.add(plate);
+    
+    }
+    
+   //Collections.sort(strModSci);
+   //Collections.sort(strModCom);
+   SaveReport("Failure List");
+	
+    }
     
     
     void Stat()
@@ -1674,7 +1705,7 @@ Options op;
             if(Remark.contains("FAIL")) continue;
            ShowMatrix();
            plate=String.format("GT : %4d  ",GT650);
-           plate=plate+"Roll :"+Roll;
+           plate=plate+"Roll :"+Roll+" - " + NameField.getText();
            subtitles="";
            for(int j=3;j<9;j++)
            {
