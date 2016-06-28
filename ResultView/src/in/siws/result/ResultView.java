@@ -72,11 +72,11 @@ public class ResultView extends JFrame implements Printable
 	static ArrayList<String> strModCom = new ArrayList<String>();
 	static ArrayList<Integer> intPasses = new ArrayList<Integer>();
 	
-	int ROWS=9;
+	int ROWS=10;
     int COLS=12;
     int dist=0; ////moderation-distance : marks for passing the student
     String[][] Matrix = new String[ROWS][COLS];
-String Stream="Commerce"; ///default stream. If found PHY || CHE || BIO change to Science
+String Stream="Commerce"; ///default stream. If found PHY || CHE || BIO change to Siicience
 String Roll="0000";
 int subtotal[]={0,0,0,0,0,0,0,0};
 int grace[]   ={0,0,0,0,0,0,0,0};
@@ -929,6 +929,11 @@ Options op;
 	                                            if(temp[j].contains("EVS")) evs=strtointeger;     
 	                                            String plate00=String.format("%02d",original);
 	                	                        Matrix[4][subindex]=plate00;
+	                	                        if(marks[0].length()>3)///if project-pract-oral
+	                	                        {  String plateopp=String.format("%02d",strtointeger);
+	                	                        	Matrix[8][subindex]=plateopp;
+	                	                        }
+	                	              
 	                                            }
 	               
 	                
