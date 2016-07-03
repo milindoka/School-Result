@@ -687,14 +687,10 @@ Options op;
             	
             	 CustomDialog myDialog = new CustomDialog(null, true, "Do you like Java?");
                  
-                 if(myDialog.getAnswer()) {
-                    show("1");
+                 if(myDialog.getAnswer() != null) {
+                    show(myDialog.getAnswer());
                  }
-                 else {
-                    show("0");
-                 }
-            	
-            	
+                
             	
             	/*              
             	int option=op.SelectOption();

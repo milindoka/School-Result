@@ -20,89 +20,90 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 
 public class CustomDialog extends JDialog implements ActionListener {
-    private JPanel myPanel = null;
-    private JButton yesButton = null;
-    private JButton noButton = null;
-    private boolean answer = false;
-    public boolean getAnswer() { return answer; }
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JButton btnModList = null;
+	private JButton btnStatistics = null;
+	private JButton btnMeritList = null;
+	private JButton btnSubMerit = null;
+	private JButton btnConsolidated = null;
+	private JButton btnMTnames = null;
+	private JButton btnDelVac = null;
+	
+	private JButton btnReserved0 = null;
+	private JButton btnReserved1 = null;
+	private JButton btnReserved2 = null;
+	private JButton btnReserved3 = null;
+	private JButton btnReserved4 = null;
+	private JButton btnReserved5 = null;
+	private JButton btnReserved6 = null;
+	private JButton btnReserved7 = null;
+	private JButton btnReserved8 = null;
+	
+	
+	
+    private String answer = "?";
+    public String getAnswer() { return answer; }
 
-    JPanel btnPanel = new JPanel(new GridLayout(4,25));
-    final Font BTN_FONT = new Font(Font.MONOSPACED, Font.BOLD, 20);
+    JPanel btnPanel = new JPanel(new GridLayout(4,16));
+    final Font BTN_FONT = new Font("Times New Roman", Font.PLAIN, 16);
 ////button matrix
 
 
     
     
     public CustomDialog(JFrame frame, boolean modal, String myMessage) 
-    {
-    	 super(frame, modal);
+  {
+   	 super(frame, modal);
     	
+    btnModList = new JButton("Mod List"); btnModList.setFont(BTN_FONT); btnPanel.add(btnModList);	btnModList.addActionListener(this);
+    btnStatistics = new JButton("Statistics"); btnStatistics.setFont(BTN_FONT); btnPanel.add(btnStatistics);btnStatistics.addActionListener(this);
+    btnMeritList = new JButton("Merit List"); btnMeritList.setFont(BTN_FONT); btnPanel.add(btnMeritList);btnMeritList.addActionListener(this);
+    btnSubMerit = new JButton("Sub Merit"); btnSubMerit.setFont(BTN_FONT); btnPanel.add(btnSubMerit);btnSubMerit.addActionListener(this);
+    btnConsolidated = new JButton("Consolidated"); btnConsolidated.setFont(BTN_FONT); btnPanel.add(btnConsolidated);btnConsolidated.addActionListener(this);	
+    btnMTnames = new JButton("Empty Names"); btnMTnames.setFont(BTN_FONT); btnPanel.add(btnMTnames);btnMTnames.addActionListener(this);
+    btnDelVac = new JButton("Del Vacants"); btnDelVac.setFont(BTN_FONT); btnPanel.add(btnDelVac);btnDelVac.addActionListener(this);
     	
-    	
-    	final JButton btnP = new JButton("Help"); btnP.setFont(BTN_FONT); btnPanel.add(btnP);
-    	final JButton btn7 = new JButton("7"); btn7.setFont(BTN_FONT); btnPanel.add(btn7);
-    	final JButton btn8 = new JButton("8"); btn8.setFont(BTN_FONT); btnPanel.add(btn8);
-    	final JButton btn9 = new JButton("9"); btn9.setFont(BTN_FONT); btnPanel.add(btn9);
-    	//JButton btnBS = new JButton("<html>&nbsp;Back<p>Space</html>"); btnBS.setFont(BTN_FONT_SMALL); btnPanel.add(btnBS);
-    	final JButton btnQN = new JButton("VA"); btnQN.setFont(BTN_FONT); btnPanel.add(btnQN);
-
-    	final JButton btnQ = new JButton(" "); btnQ.setFont(BTN_FONT); btnPanel.add(btnQ);
-    	final JButton btn4 = new JButton("4"); btn4.setFont(BTN_FONT); btnPanel.add(btn4);
-    	final JButton btn5 = new JButton("5"); btn5.setFont(BTN_FONT); btnPanel.add(btn5);
-    	final JButton btn6 = new JButton("6"); btn6.setFont(BTN_FONT); btnPanel.add(btn6);
-    	JButton btnBS = new JButton("X"); btnBS.setFont(BTN_FONT); btnPanel.add(btnBS);
-
-
-    	final JButton btnR = new JButton(" "); btnR.setFont(BTN_FONT); btnPanel.add(btnR);
-    	final JButton btn1 = new JButton("1"); btn1.setFont(BTN_FONT); btnPanel.add(btn1);
-    	final JButton btn2 = new JButton("2"); btn2.setFont(BTN_FONT); btnPanel.add(btn2);
-    	final JButton btn3 = new JButton("3"); btn3.setFont(BTN_FONT); btnPanel.add(btn3);
-
-    	final JButton btnUP = new JButton("UP"); btnUP.setFont(BTN_FONT); btnPanel.add(btnUP);
-
-    	final JButton btnS = new JButton(" "); btnS.setFont(BTN_FONT); btnPanel.add(btnS);
-    	final JButton btn0 = new JButton("0"); btn0.setFont(BTN_FONT); btnPanel.add(btn0);
-    	final JButton btnAB = new JButton("AB"); btnAB.setFont(BTN_FONT); btnPanel.add(btnAB);
-    	final JButton btn100 = new JButton("100"); btn100.setFont(BTN_FONT); btnPanel.add(btn100);
-    	final JButton btnDN = new JButton("DN"); btnDN.setFont(BTN_FONT); btnPanel.add(btnDN);
-
-    	
+    btnReserved0 = new JButton("Reserved0"); btnReserved0.setFont(BTN_FONT); btnPanel.add(btnReserved0);btnReserved0.addActionListener(this);
+    btnReserved1 = new JButton("Reserved1"); btnReserved1.setFont(BTN_FONT); btnPanel.add(btnReserved1);btnReserved1.addActionListener(this);
+    btnReserved2 = new JButton("Reserved2"); btnReserved2.setFont(BTN_FONT); btnPanel.add(btnReserved2);btnReserved2.addActionListener(this);
+    btnReserved3 = new JButton("Reserved3"); btnReserved3.setFont(BTN_FONT); btnPanel.add(btnReserved3);btnReserved3.addActionListener(this);
+    btnReserved4 = new JButton("Reserved4"); btnReserved4.setFont(BTN_FONT); btnPanel.add(btnReserved4);btnReserved4.addActionListener(this);
+    btnReserved5 = new JButton("Reserved5"); btnReserved5.setFont(BTN_FONT); btnPanel.add(btnReserved5);btnReserved5.addActionListener(this);
+    btnReserved6 = new JButton("Reserved6"); btnReserved6.setFont(BTN_FONT); btnPanel.add(btnReserved6);btnReserved6.addActionListener(this);
+    btnReserved7 = new JButton("Reserved7"); btnReserved7.setFont(BTN_FONT); btnPanel.add(btnReserved7);btnReserved7.addActionListener(this);
+    btnReserved8 = new JButton("Reserved8"); btnReserved8.setFont(BTN_FONT); btnPanel.add(btnReserved8);btnReserved8.addActionListener(this);
+    
     	getContentPane().add(btnPanel, BorderLayout.CENTER);
-
     	
-       /*
-        myPanel = new JPanel();
-        getContentPane().add(myPanel);
-        myPanel.add(new JLabel(myMessage));
-        yesButton = new JButton("Yes");
-        yesButton.addActionListener(this);
-        myPanel.add(yesButton); 
-        noButton = new JButton("No");
-        noButton.addActionListener(this);
-        myPanel.add(noButton);  
-        
-        */
         pack();
         setLocationRelativeTo(frame);
         setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        if(yesButton == e.getSource()) {
-            System.err.println("User chose yes.");
-            answer = true;
-            setVisible(false);
-        }
-        else if(noButton == e.getSource()) {
-            System.err.println("User chose no.");
-            answer = false;
-            setVisible(false);
-        }
-    }
+    public void actionPerformed(ActionEvent e)
+    {	if(btnModList == e.getSource()) { answer = "ModList"; setVisible(false); }
+    	if(btnStatistics == e.getSource()) { answer = "Statistics"; setVisible(false); }
+    	if(btnMeritList == e.getSource()) { answer = "MeritList"; setVisible(false); }
+    	if(btnSubMerit == e.getSource()) { answer = "SubMerit"; setVisible(false); }
+    	if(btnConsolidated == e.getSource()) { answer = "onsolidated"; setVisible(false); }
+    	if(btnMTnames == e.getSource()) { answer = "MTnames"; setVisible(false); }
+    	if(btnDelVac == e.getSource()) { answer = "DelVac"; setVisible(false); }
+    	if(btnReserved0 == e.getSource()) { answer = "Reserved0"; setVisible(false); }
+    	if(btnReserved1 == e.getSource()) { answer = "Reserved1"; setVisible(false); }
+    	if(btnReserved2 == e.getSource()) { answer = "Reserved2"; setVisible(false); }
+    	if(btnReserved3 == e.getSource()) { answer = "Reserved3"; setVisible(false); }
+    	if(btnReserved4 == e.getSource()) { answer = "Reserved4"; setVisible(false); }
+    	if(btnReserved5 == e.getSource()) { answer = "Reserved5"; setVisible(false); }
+    	if(btnReserved6 == e.getSource()) { answer = "Reserved6"; setVisible(false); }
+    	if(btnReserved7 == e.getSource()) { answer = "Reserved7"; setVisible(false); }
+    	if(btnReserved8 == e.getSource()) { answer = "Reserved8"; setVisible(false); }
+     }
     
 }
