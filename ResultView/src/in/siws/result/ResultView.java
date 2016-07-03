@@ -683,7 +683,20 @@ Options op;
         buttonOptions.addActionListener(new ActionListener() 
         { 
             public void actionPerformed(ActionEvent arg0) 
-            {               
+            {
+            	
+            	 CustomDialog myDialog = new CustomDialog(null, true, "Do you like Java?");
+                 
+                 if(myDialog.getAnswer()) {
+                    show("1");
+                 }
+                 else {
+                    show("0");
+                 }
+            	
+            	
+            	
+            	/*              
             	int option=op.SelectOption();
             	
             	switch (option)
@@ -697,6 +710,8 @@ Options op;
             	 case 7 : SubMerit("MAT");
             	 default : break;
             	}
+            
+            */
             }
             
         });
