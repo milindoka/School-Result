@@ -112,7 +112,7 @@ static JTable table2;
  private JScrollPane scrollPane2;
  
 SetPrinter sp;
-Options op;
+
 
 
 
@@ -129,7 +129,7 @@ Options op;
     	
     	
     	sp=SetPrinter.getInstance();
-    	op=Options.getInstance();
+    	
     	int year = Calendar.getInstance().get(Calendar.YEAR);
     	AY=String.format("%d-%d",year-1,year%100);
     	
@@ -508,99 +508,7 @@ Options op;
             }
         });
 
-        JButton buttonDelVac = new JButton("Delete Vacants");
-        buttonDelVac.addActionListener(new ActionListener() 
-        {
-            public void actionPerformed(ActionEvent arg0) 
-            {  int SKIP=1,DELETE=2;
-            	String onestudent,temp[],errorMessage = "";
-                int hashcount;
-         
-            do { // Show input dialog with current error message, if any
-                String stringInput = JOptionPane.showInputDialog
-                		(errorMessage + "Enter Hash Count");
-                try { hashcount = Integer.parseInt(stringInput);
-                    if (hashcount < 0 || hashcount > 100) 
-                     {  errorMessage = "That number is not within the \n" + "allowed range!\n";
-                        
-                     }
-                } catch (NumberFormatException e) 
-                {
-                    // The typed text was not an integer
-                    errorMessage = "The text you typed is not a number.\n";
-                    return;
-                }
-            } while (!errorMessage.isEmpty());
-            
-            if(!errorMessage.isEmpty()) return;
-                int totalrecords=strArray.size(); 
-            
-            	for (int j=0;j<totalrecords;j++)
-            	 { onestudent=strArray.get(j);
-            	   temp=onestudent.split("#");
-            	   if(temp.length==hashcount) continue;
-            	
-            	   currentindex=j; 
-            	   FillMatrix(currentindex);
-       			   FillDistance();
-       			   ShowMatrix();
-            	 
-       			  /* 
-       			 javax.swing.JOptionPane.showMessageDialog(
-       			 /////JOptionPane Location decided in the following argument instead of null
-       			 new javax.swing.JFrame()
-       			 {
-       		      public boolean isShowing(){return true;}
-       		      public java.awt.Rectangle getBounds(){return new java.awt.Rectangle(1000,100,0,0);}
-       		    },   ///// end ofthis argument
-       		    
-       		    "Hello World");
-       			   
-       			   */
-       			   
-       			   
-       			   
-            	   /////This is possibly vacant, so pop confirmation
-       			Object[] options = {"Cancel Process","Skip This Roll","Delete"};
-               int result = JOptionPane.showOptionDialog(
-            		   ///////////// first argument of JOptionPane for corner location
-            		   new javax.swing.JFrame()
-     			     { 
-        		     
-						private static final long serialVersionUID = 1L;
-					public boolean isShowing(){return true;}
-        		      public java.awt.Rectangle getBounds(){return new java.awt.Rectangle(1000,100,0,0);}
-        		    },  /////////////end of first argument of JOptionPane
-        		    
-                "Delete This Roll Permanently ?",
-                "Alert Dialog",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,
-                 null,        //do not use a custom Icon
-                 options,     //the titles of buttons
-                 options[0]); //default button title
-       			   
-       			  
-            	   ////else result=0 i.e YES
-            	   
-            	  if(result==DELETE)
-            	  {
-            	   grandtotal=grandtotal-GT1200;
-                   String ttt;
-                   ttt=String.format("%d",grandtotal);
-                   GTlabel.setText(ttt);
-            	   
-                   strArray.remove(currentindex);
-                   totalrecords=strArray.size();
-                   if(j>0) j--;
-                   continue;
-            	  }
-            	  if(result==SKIP) continue;
-            	  return;
-            	 }  
-            	 
-            }
-            
-        });
-
+       
         JButton buttonDelThis = new JButton("Delete This");
         buttonDelThis.addActionListener(new ActionListener() 
         {
@@ -685,13 +593,20 @@ Options op;
             public void actionPerformed(ActionEvent arg0) 
             {
             	
-            	 CustomDialog myDialog = new CustomDialog(null, true, "Do you like Java?");
+            	 OptionDialog myDialog = new OptionDialog(null, true, "Select Option ?");
                  
-                 if(myDialog.getAnswer() != null) {
-                    show(myDialog.getAnswer());
-                 }
-                
-            	
+            	 String option=myDialog.getAnswer();
+            	 
+                 if(option == null) return;
+                  
+                 if(option.contains("ModList"))      {Mod();return;}
+                 if(option.contains("Statistics"))   {Stat();return;}
+                 if(option.contains("MeritList"))    {Merit();return;}
+                 if(option.contains("SubMerit"))     {SubMerit("MAT");return;}
+                 if(option.contains("Consolidated")) {PrintConsolidatedResult();return;}
+                 if(option.contains("MTnames")) {SaveEmptyNames();return;}
+                 if(option.contains("DelVac")) {DeleteVacants();return;}
+                 if(option.contains("FList")) {FList();return;}
             	/*              
             	int option=op.SelectOption();
             	
@@ -805,7 +720,6 @@ Options op;
         southPanel.add(buttonPrint);
         southPanel.add(buttonPrintAll);
         southPanel.add(buttonJump);
-        southPanel.add(buttonDelVac);
         southPanel.add(buttonDelThis);
         southPanel.add(buttonFail);
         southPanel.add(buttonxSub);
@@ -1611,7 +1525,16 @@ Options op;
 //  boolean dontShow = checkbox.isSelected();
   
   //myPanel.add(checkbox);
-	  String Range = JOptionPane.showInputDialog(null,myPanel);
+	  String Range = JOptionPane.showInputDialog(null,"Enter Range Separated by -");
+	  
+	  if(Range == null || (Range != null && ("".equals(Range))))   
+	  {
+	      return;
+	  }
+	  
+	  
+	  if(!Range.contains("-")) return;
+	  
 	  temp1=Range.split("-");
 	//  printpass=checkbox.isSelected();
 	//  if(checkbox.isSelected()) show("selected"); else show("non-selected");
@@ -1710,6 +1633,88 @@ Options op;
         show(plate);
 
     }
+    
+    void DeleteVacants()
+    {int SKIP=1,DELETE=2;
+	String onestudent,temp[],errorMessage = "";
+    int hashcount;
+
+do { // Show input dialog with current error message, if any
+    String stringInput = JOptionPane.showInputDialog
+    		(errorMessage + "Enter Hash Count");
+    try { hashcount = Integer.parseInt(stringInput);
+        if (hashcount < 0 || hashcount > 100) 
+         {  errorMessage = "That number is not within the \n" + "allowed range!\n";
+            
+         }
+    } catch (NumberFormatException e) 
+    {
+        // The typed text was not an integer
+        errorMessage = "The text you typed is not a number.\n";
+        return;
+    }
+} while (!errorMessage.isEmpty());
+
+if(!errorMessage.isEmpty()) return;
+    int totalrecords=strArray.size(); 
+
+	for (int j=0;j<totalrecords;j++)
+	 { onestudent=strArray.get(j);
+	   temp=onestudent.split("#");
+	   if(temp.length==hashcount) continue;
+	
+	   currentindex=j; 
+	   FillMatrix(currentindex);
+		   FillDistance();
+		   ShowMatrix();
+	   
+		   
+	   /////This is possibly vacant, so pop confirmation
+		Object[] options = {"Cancel Process","Skip This Roll","Delete"};
+   int result = JOptionPane.showOptionDialog(
+		   ///////////// first argument of JOptionPane for corner location
+		   new javax.swing.JFrame()
+		     { 
+	     
+			private static final long serialVersionUID = 1L;
+		public boolean isShowing(){return true;}
+	      public java.awt.Rectangle getBounds(){return new java.awt.Rectangle(1000,100,0,0);}
+	    },  /////////////end of first argument of JOptionPane
+	    
+    "Delete This Roll Permanently ?",
+    "Alert Dialog",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,
+     null,        //do not use a custom Icon
+     options,     //the titles of buttons
+     options[0]); //default button title
+		   
+		  
+	   ////else result=0 i.e YES
+	   
+	  if(result==DELETE)
+	  {
+	   grandtotal=grandtotal-GT1200;
+       String ttt;
+       ttt=String.format("%d",grandtotal);
+       GTlabel.setText(ttt);
+	   
+       strArray.remove(currentindex);
+       totalrecords=strArray.size();
+       if(j>0) j--;
+       continue;
+	  }
+	  if(result==SKIP) continue;
+	  return;
+	 }  
+
+    	
+    	
+    	
+    	
+    	
+    	
+    }
+    
+    
     void Merit()
     {	
     	  if(strArray.size()==0) { show("No Data"); return;}
