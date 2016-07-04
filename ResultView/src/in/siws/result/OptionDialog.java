@@ -37,7 +37,7 @@ public class OptionDialog extends JDialog implements ActionListener {
 	private JButton btnDelVac = null;
 	
 	private JButton btnFList = null;
-	private JButton btnReserved1 = null;
+	private JButton btnCardsPdf = null;
 	private JButton btnReserved2 = null;
 	private JButton btnReserved3 = null;
 	private JButton btnReserved4 = null;
@@ -71,7 +71,7 @@ public class OptionDialog extends JDialog implements ActionListener {
     btnDelVac = new JButton("Del Vacants"); btnDelVac.setFont(BTN_FONT); btnPanel.add(btnDelVac);btnDelVac.addActionListener(this);
     	
     btnFList = new JButton("Failures"); btnFList.setFont(BTN_FONT); btnPanel.add(btnFList);btnFList.addActionListener(this);
-    btnReserved1 = new JButton("Reserved1"); btnReserved1.setFont(BTN_FONT); btnPanel.add(btnReserved1);btnReserved1.addActionListener(this);
+    btnCardsPdf = new JButton("Cards Pdf"); btnCardsPdf.setFont(BTN_FONT); btnPanel.add(btnCardsPdf);btnCardsPdf.addActionListener(this);
     btnReserved2 = new JButton("Reserved2"); btnReserved2.setFont(BTN_FONT); btnPanel.add(btnReserved2);btnReserved2.addActionListener(this);
     btnReserved3 = new JButton("Reserved3"); btnReserved3.setFont(BTN_FONT); btnPanel.add(btnReserved3);btnReserved3.addActionListener(this);
     btnReserved4 = new JButton("Reserved4"); btnReserved4.setFont(BTN_FONT); btnPanel.add(btnReserved4);btnReserved4.addActionListener(this);
@@ -96,7 +96,7 @@ public class OptionDialog extends JDialog implements ActionListener {
     	if(btnMTnames == e.getSource()) { answer = "MTnames"; setVisible(false); }
     	if(btnDelVac == e.getSource()) { answer = "DelVac"; setVisible(false); }
     	if(btnFList == e.getSource()) { answer = "FList"; setVisible(false); }
-    	if(btnReserved1 == e.getSource()) { answer = "Reserved1"; setVisible(false); }
+    	if(btnCardsPdf == e.getSource()) { answer = "CardsPdf"; setVisible(false); }
     	if(btnReserved2 == e.getSource()) { answer = "Reserved2"; setVisible(false); }
     	if(btnReserved3 == e.getSource()) { answer = "Reserved3"; setVisible(false); }
     	if(btnReserved4 == e.getSource()) { answer = "Reserved4"; setVisible(false); }

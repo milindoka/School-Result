@@ -11,6 +11,7 @@ import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,6 +33,11 @@ import javax.swing.table.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
 
 public class ResultView extends JFrame implements Printable 
 { 
@@ -607,6 +613,16 @@ SetPrinter sp;
                  if(option.contains("MTnames")) {SaveEmptyNames();return;}
                  if(option.contains("DelVac")) {DeleteVacants();return;}
                  if(option.contains("FList")) {FList();return;}
+                 if(option.contains("CardsPdf")) 
+                 {try {
+					CardsPdf();
+				      } catch (DocumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}return;}
             	/*              
             	int option=op.SelectOption();
             	
@@ -1713,6 +1729,28 @@ if(!errorMessage.isEmpty()) return;
     	
     	
     }
+    
+    
+    
+    
+    
+    void CardsPdf() throws DocumentException, IOException
+    {
+    	
+    	String filename="hello.pdf";
+
+    		
+    	Document document = new Document();
+    	PdfWriter.getInstance(document, new FileOutputStream(filename));
+    	document.open();
+    	document.add(new Paragraph("Hello World!"));
+    
+    	document.close();
+    	
+    }
+    
+    
+    
     
     
     void Merit()
