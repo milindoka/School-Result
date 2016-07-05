@@ -1,6 +1,12 @@
 package in.siws.result;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -22,22 +28,59 @@ import java.util.Collections;
 import javax.print.PrintService;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JViewport;
+import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.BaseColor;
+
+
+//import sun.font.FontFamily;
+
 
 public class ResultView extends JFrame implements Printable 
 { 
@@ -53,10 +96,21 @@ public class ResultView extends JFrame implements Printable
     String FirstLine="";  
     String Strim;
     String AY;
-   // boolean EVSfail;
+   
+    
+    
+    Font TNR16=new Font("Times New Roman", Font.PLAIN, 16);
+    
+    
+    // boolean EVSfail;
+    
+    
+    
     boolean printpass=false;
     Toast toast;
     DocumentFilter filter = new UppercaseDocumentFilter();    
+    
+    
     
     
 	public static Object GetData(int row_index, int col_index)
@@ -1738,12 +1792,30 @@ if(!errorMessage.isEmpty()) return;
     {
     	
     	String filename="hello.pdf";
-
     		
-    	Document document = new Document();
+    	Document document = new Document(PageSize.A4);
     	PdfWriter.getInstance(document, new FileOutputStream(filename));
     	document.open();
-    	document.add(new Paragraph("Hello World!"));
+    	
+    	
+    	
+         com.itextpdf.text.Font NORMAL = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 12);
+        	 
+    	 
+     //    Font TNR=new Font(TNR16)
+     // Phrase phr=new Phrase("Test",TNR16);
+      
+    	PdfPTable table = new PdfPTable(12);
+    	
+    	PdfPCell cell = new PdfPCell(new Phrase("Test",NORMAL));
+    	 cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+    	 cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+    	for(int i=0;i<120;i++)
+    	{
+    	table.addCell(cell);
+    	}
+    	    	
+    	document.add(table);
     
     	document.close();
     	
