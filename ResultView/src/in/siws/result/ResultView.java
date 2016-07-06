@@ -1806,11 +1806,30 @@ if(!errorMessage.isEmpty()) return;
      // Phrase phr=new Phrase("Test",TNR16);
       
     	PdfPTable table = new PdfPTable(12);
+    	Phrase phr=new Phrase("Test",NORMAL);
     	
-    	PdfPCell cell = new PdfPCell(new Phrase("Test",NORMAL));
+    	
+    	PdfPCell cell = new PdfPCell(phr);
     	 cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-    	 cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-    	for(int i=0;i<120;i++)
+    	 //cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+    	
+    	 
+    	 
+    	 //Phrase content = new Phrase("Blah blah blah", Font);
+
+    	// Float fontSize = NORMAL.getSize();
+        //    	 Float capHeight = 
+
+    	 Float padding = 5f;    
+
+    	// PdfPCell cell = new PdfPCell(content);
+    	 //cell.setPadding(padding);
+    	 cell.setPaddingBottom(padding);
+    	 
+    	 
+    	 
+    	 
+    	 for(int i=0;i<120;i++)
     	{
     	table.addCell(cell);
     	}
