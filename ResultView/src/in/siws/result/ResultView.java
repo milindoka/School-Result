@@ -89,6 +89,8 @@ public class ResultView extends JFrame implements Printable
     int grandtotal=0;	
     int GT1200=0;
     int GT650=0;
+    int evs=0;
+    int pte=0;
     int TotalPrintPages=0;
     int startpageindex=0,endpageindex=0;
     JTextField NameField;
@@ -99,7 +101,7 @@ public class ResultView extends JFrame implements Printable
    
     
     
-    Font TNR16=new Font("Times New Roman", Font.PLAIN, 16);
+   // Font TNR16=new Font("Times New Roman", Font.PLAIN, 16);
     
     
     // boolean EVSfail;
@@ -845,7 +847,7 @@ SetPrinter sp;
  public void CalculateGT()
  {  grandtotal=0;
     for(int i=0;i<strArray.size();i++)
-    {FillMatrix(i);grandtotal=grandtotal+GT1200;
+    {FillMatrix(i);grandtotal=grandtotal+GT1200+evs+pte;
     }
     String ttt;
     ttt=String.format("%d",grandtotal);
@@ -885,7 +887,7 @@ SetPrinter sp;
          subindex=0;
          gracecount=0;
          gracetotal=0;
-         int evs=0;
+         evs=pte=0;
 	     
       for(int i=0;i<Order.length;i++)
 	     {   found=false;
@@ -922,6 +924,7 @@ SetPrinter sp;
 	                                            if(!temp[j].contains("EVS") && !temp[j].contains("PTE"))
 	                                            grand[4]=grand[4]+strtointeger;
 	                                            if(temp[j].contains("EVS")) evs=strtointeger;     
+	                                            if(temp[j].contains("PTE")) pte=strtointeger;
 	                                            String plate00=String.format("%02d",original);
 	                	                        Matrix[4][subindex]=plate00;
 	                	                        if(marks[0].length()>3)///if project-pract-oral
@@ -1797,14 +1800,8 @@ if(!errorMessage.isEmpty()) return;
     	PdfWriter.getInstance(document, new FileOutputStream(filename));
     	document.open();
     	
-    	
-    	
          com.itextpdf.text.Font NORMAL = new com.itextpdf.text.Font(FontFamily.TIMES_ROMAN, 12);
-        	 
-    	 
-     //    Font TNR=new Font(TNR16)
-     // Phrase phr=new Phrase("Test",TNR16);
-      
+        
     	PdfPTable table = new PdfPTable(12);
     	Phrase phr=new Phrase("Test",NORMAL);
     	
@@ -1813,21 +1810,9 @@ if(!errorMessage.isEmpty()) return;
     	 cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
     	 //cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
     	
-    	 
-    	 
-    	 //Phrase content = new Phrase("Blah blah blah", Font);
-
-    	// Float fontSize = NORMAL.getSize();
-        //    	 Float capHeight = 
-
     	 Float padding = 5f;    
 
-    	// PdfPCell cell = new PdfPCell(content);
-    	 //cell.setPadding(padding);
     	 cell.setPaddingBottom(padding);
-    	 
-    	 
-    	 
     	 
     	 for(int i=0;i<120;i++)
     	{
@@ -1839,9 +1824,6 @@ if(!errorMessage.isEmpty()) return;
     	document.close();
     	
     }
-    
-    
-    
     
     
     void Merit()
