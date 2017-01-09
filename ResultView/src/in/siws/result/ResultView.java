@@ -63,20 +63,10 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-
-
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.BaseColor;
 
 
 //import sun.font.FontFamily;
@@ -154,7 +144,8 @@ String StaticMatrix[][]={
                 {"Terminal-II (D)","100",""},                         
                 {"Aggregate (A+B+C)","200","70"},
                 {"Average (A+B+C)/2","100","35"},
-                {"Grace","30",""}                             
+                {"Grace","30",""},
+                {"Oral/Practs/Proj","",""}
                }; ////3 rows 8 columns
 
 int subindex=0;
@@ -424,6 +415,7 @@ SetPrinter sp;
             	TableColumn tc;
             	String subttile;
             	String marks="";
+            	String T2marks="";
             	
             	
             	String one="",temp="";////=strArray.get(currentindex);
@@ -431,7 +423,7 @@ SetPrinter sp;
                 temp=String.format("%-60s",NameField.getText().trim());
                 one+=temp;
                 for(int i=0;i<6;i++)
-                	for(int j=0;j<4;j++)
+                	for(int j=0;j<3;j++) //Except T2 because T2 includes project mark
                  {
                  tc=tcm.getColumn(3+i);
                  subttile=(String) tc.getHeaderValue();
@@ -442,7 +434,7 @@ SetPrinter sp;
                  one+=DiviField.getText()+"="+Row[j]+"="+subttile+":"+marks;
                  }
                 
-                tc=tcm.getColumn(9);
+                tc=tcm.getColumn(9);                     ////EVS
                 subttile=(String) tc.getHeaderValue();
                 if(subttile.length()!=0) 
                 { marks=(String) GetData(5,9);
@@ -451,7 +443,7 @@ SetPrinter sp;
                 	  one+="#"+DiviField.getText()+"=T2="+subttile+":"+marks;
                 }
                   
-                tc=tcm.getColumn(10);
+                tc=tcm.getColumn(10);                   ///PTE
                 subttile=(String) tc.getHeaderValue();
                 if(subttile.length()!=0) 
                 { marks=(String) GetData(5,9);
@@ -459,7 +451,41 @@ SetPrinter sp;
                   else 
                 	  one+="#"+DiviField.getText()+"=T2="+subttile+":"+marks;
                 }   
-                
+               ///for OPP  (Oral, Practical, Project) 
+               /// Also T2 marks updated in the same loop
+                int promarks=0;int t2marks=0;
+                for(int i=0;i<6;i++)
+                	//for(int j=0;j<4;j++)
+                 {promarks=0;t2marks=0;
+                 tc=tcm.getColumn(3+i);
+                 subttile=(String) tc.getHeaderValue();
+                 if(subttile.length()==0) continue;
+                 marks=(String) GetData(7,3+i);      ////get 7th row
+              
+              
+                 T2marks=(String) GetData(3,3+i); ///3rd row for T2 marks
+                 
+                 
+                 
+                 
+                 if(marks.length()==0 || marks.contains("AB")) ;
+                 else
+ 	                
+ 	                promarks=Integer.parseInt(marks.replaceAll("[^0-9.]",""));
+                 
+                 if(T2marks.length()==0 || T2marks.contains("AB")) ;
+                 else
+ 	                
+ 	                t2marks=Integer.parseInt(T2marks.replaceAll("[^0-9.]",""));
+                 
+                 T2marks=String.format("%02d",t2marks-promarks);
+                 one+="#";
+                 one+=DiviField.getText()+"="+"T2"+"="+subttile+":"+T2marks;
+                 
+              
+                one+="#";
+                one+=DiviField.getText()+"="+"T2"+"="+subttile+"OPP"+":"+marks;
+                 }
              //   show("<html><body><p style='width: 600px;'>"+one+"</p></body></html>");
                // show(one);
                 strArray.set(currentindex, one);
@@ -803,7 +829,7 @@ SetPrinter sp;
        // FillMatrix(CurrentIndex);
        // ShowMatrix();
         
-        for(int i=1;i<8;i++)
+        for(int i=1;i<9;i++)
  		   for(int j=0;j<3;j++)
  		   {
  			   SetData(StaticMatrix[i][j],i-1,j);
@@ -984,13 +1010,13 @@ SetPrinter sp;
      Matrix[4][6]=Matrix[4][7]=""; ///Remove EVS and PTE From 4th Row  
       
       
-      if (gracecount>3 || gracetotal>30) { Remark="FAIL"; return; }
+      if (gracecount>3 || gracetotal>15) { Remark="FAIL"; return; }
       
-      for (int i=0; i<6;i++) if(grace[i]>10) { Remark="FAIL"; return; }
+      for (int i=0; i<6;i++) if(grace[i]>5) { Remark="FAIL"; return; }
       
       if(evs<18) { Remark="FAIL"; return;}
       
-      plate=String.format("%d/30",gracetotal);
+      plate=String.format("%d/15",gracetotal);
       Matrix[7][8]=plate;
       
       for (int i=0; i<6;i++) if(grace[i]> 0) { Remark="PROMOTED"; return; }
@@ -1021,8 +1047,8 @@ SetPrinter sp;
     		 if(subtotal[sort[i]]>subtotal[sort[j]]) 
     		  {temp=sort[i];sort[i]=sort[j];sort[j]=temp; }
      
-     for(int i=0;i<3;i++) if(subtotal[sort[i]]<49)        
-      {  int gap=49-subtotal[sort[i]];
+     for(int i=0;i<3;i++) if(subtotal[sort[i]]<54)        
+      {  int gap=54-subtotal[sort[i]];
          plate=String.format("%d",gap);
     	 SetData(plate,8,3+sort[i]);
     	 dist=dist+gap;
@@ -1068,6 +1094,11 @@ SetPrinter sp;
     	File f = new File(System.getProperty("java.class.path"));
     	File dir = f.getAbsoluteFile().getParentFile();
     	String path = dir.toString();
+    	///to be removed for exported jar
+    	String temp[];
+    	temp=path.split(":");
+    	path=temp[0];
+    	////to be removed for exported jar
     	
     	fylename=path+="/Result.rlt";
     	//show(fylename);
@@ -1591,7 +1622,7 @@ SetPrinter sp;
    // intPasses.removeAll(intPasses);
   //JTextField yField = new JTextField(10);
 
-  JPanel myPanel = new JPanel();
+ // JPanel myPanel = new JPanel();
 //  JCheckBox checkbox = new JCheckBox("Only Non-Failures");
   //String message = "Are you sure you want to disconnect the selected products?";
 //  boolean dontShow = checkbox.isSelected();
@@ -1810,18 +1841,9 @@ if(!errorMessage.isEmpty()) return;
 	  }
 	  if(result==SKIP) continue;
 	  return;
-	 }  
-
-    	
-    	
-    	
-    	
-    	
+	 }  	
     	
     }
-    
-    
-    
     
     
     void CardsPdf() throws DocumentException, IOException
@@ -1861,8 +1883,6 @@ if(!errorMessage.isEmpty()) return;
     	// PdfPCell cell = new PdfPCell(content);
     	 //cell.setPadding(padding);
     	 cell.setPaddingBottom(padding);
-    	 
-    	 
     	 
     	 
     	 for(int i=0;i<120;i++)
