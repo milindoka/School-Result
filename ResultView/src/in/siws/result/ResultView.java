@@ -460,8 +460,14 @@ SetPrinter sp;
                  tc=tcm.getColumn(3+i);
                  subttile=(String) tc.getHeaderValue();
                  if(subttile.length()==0) continue;
+                 
                  marks=(String) GetData(7,3+i);      ////get 7th row
-              
+                 if(marks.length()!=0)
+                 {
+                 one+="#";
+                 one+=DiviField.getText()+"="+"T2"+"="+subttile+"OPP"+":"+marks;
+                 }
+                 
               
                  T2marks=(String) GetData(3,3+i); ///3rd row for T2 marks
                  
@@ -483,8 +489,7 @@ SetPrinter sp;
                  one+=DiviField.getText()+"="+"T2"+"="+subttile+":"+T2marks;
                  
               
-                one+="#";
-                one+=DiviField.getText()+"="+"T2"+"="+subttile+"OPP"+":"+marks;
+                
                  }
              //   show("<html><body><p style='width: 600px;'>"+one+"</p></body></html>");
                // show(one);
