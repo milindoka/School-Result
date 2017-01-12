@@ -144,7 +144,7 @@ String StaticMatrix[][]={
                 {"Terminal-II (D)","100",""},                         
                 {"Aggregate (A+B+C)","200","70"},
                 {"Average (A+B+C)/2","100","35"},
-                {"Grace","30",""},
+                {"Grace","15",""},
                 {"Oral/Practs/Proj","",""}
                }; ////3 rows 8 columns
 
@@ -1052,8 +1052,8 @@ SetPrinter sp;
     		 if(subtotal[sort[i]]>subtotal[sort[j]]) 
     		  {temp=sort[i];sort[i]=sort[j];sort[j]=temp; }
      
-     for(int i=0;i<3;i++) if(subtotal[sort[i]]<54)        
-      {  int gap=54-subtotal[sort[i]];
+     for(int i=0;i<3;i++) if(subtotal[sort[i]]<59)        
+      {  int gap=59-subtotal[sort[i]];
          plate=String.format("%d",gap);
     	 SetData(plate,8,3+sort[i]);
     	 dist=dist+gap;
