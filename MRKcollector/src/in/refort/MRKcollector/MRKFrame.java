@@ -79,7 +79,7 @@ public class MRKFrame extends JFrame
     private JButton btnHelp;
  	private JButton btnNames;
 	private JButton btnRemNems;
-	private JButton btnRes02;
+	private JButton btnAcceptAll;
 	private JButton btnRes03;
 	
 	private JTable table;
@@ -590,6 +590,39 @@ public void mouseClicked(MouseEvent arg0)
 }
 });
 
+
+
+
+/////////////////////////START OF GET Res02///////////////////////
+btnAcceptAll = new JButton("Accept All");
+btnAcceptAll.addMouseListener(new MouseAdapter() {
+@Override
+public void mouseClicked(MouseEvent e) 
+{show("routine to be added");
+
+}
+});
+btnAcceptAll.setToolTipText("Accept All Files");
+GridBagConstraints gbc_btnres02 = new GridBagConstraints();
+gbc_btnres02.fill = GridBagConstraints.HORIZONTAL;
+gbc_btnres02.insets = new Insets(0, 0, 5, 5);
+gbc_btnres02.gridx = 0;
+gbc_btnres02.gridy = 8;
+contentPane.add(btnAcceptAll, gbc_btnres02);
+//////////////////////END OF GET RES02 //////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 btnReject = new JButton("Reject");
 btnReject.setToolTipText("Reject Current Marklist");
 btnReject.addMouseListener(new MouseAdapter() {
@@ -606,7 +639,7 @@ GridBagConstraints gbc_btnReject = new GridBagConstraints();
 gbc_btnReject.fill = GridBagConstraints.HORIZONTAL;
 gbc_btnReject.insets = new Insets(0, 0, 5, 5);
 gbc_btnReject.gridx = 0;
-gbc_btnReject.gridy = 8;
+gbc_btnReject.gridy = 9;
 contentPane.add(btnReject, gbc_btnReject);
 
 GridBagConstraints gbc_btnSelectPrinter = new GridBagConstraints();
@@ -688,7 +721,7 @@ contentPane.add(btnSelectPrinter, gbc_btnSelectPrinter);
 				gbc_btnLoad.fill = GridBagConstraints.HORIZONTAL;
 				gbc_btnLoad.insets = new Insets(0, 0, 5, 5);
 				gbc_btnLoad.gridx = 0;
-				gbc_btnLoad.gridy = 9;
+				gbc_btnLoad.gridy = 10;
 				contentPane.add(btnLoad, gbc_btnLoad);
 				GridBagConstraints gbc_btnDelete = new GridBagConstraints();
 				gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
@@ -716,7 +749,7 @@ btnSave.addMouseListener(new MouseAdapter() {
 		gbc_btnSave.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnSave.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSave.gridx = 0;
-		gbc_btnSave.gridy = 10;
+		gbc_btnSave.gridy = 11;
 		contentPane.add(btnSave, gbc_btnSave);
 					////////////////////////END OF BUTTON DELETE////////////////////////
 					
@@ -772,7 +805,7 @@ contentPane.add(btnSort, gbc_btnSort);
 					gbc_btnUpdatePT.fill = GridBagConstraints.HORIZONTAL;
 					gbc_btnUpdatePT.insets = new Insets(0, 0, 5, 5);
 					gbc_btnUpdatePT.gridx = 0;
-					gbc_btnUpdatePT.gridy = 11;
+					gbc_btnUpdatePT.gridy = 12;
 					contentPane.add(btnUpdatePT, gbc_btnUpdatePT);
 		
 
@@ -817,7 +850,7 @@ contentPane.add(btnSort, gbc_btnSort);
 		GridBagConstraints gbc_btnSaveReport = new GridBagConstraints();
 		gbc_btnSaveReport.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSaveReport.gridx = 0;
-		gbc_btnSaveReport.gridy = 12;
+		gbc_btnSaveReport.gridy = 13;
 		contentPane.add(btnSaveReport, gbc_btnSaveReport);
 		
 		btnPrintMrk = new JButton("Print MRK");
@@ -856,7 +889,7 @@ contentPane.add(btnSort, gbc_btnSort);
 		gbc_btnSqliteDB.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnSqliteDB.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSqliteDB.gridx = 0;
-		gbc_btnSqliteDB.gridy = 13;
+		gbc_btnSqliteDB.gridy = 14;
 		contentPane.add(btnSqliteDB, gbc_btnSqliteDB);
 		//////////////////////////END OF SQLITE DB///////////////
 		
@@ -874,7 +907,7 @@ contentPane.add(btnSort, gbc_btnSort);
 		gbc_btnNames.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnNames.insets = new Insets(0, 0, 5, 5);
 		gbc_btnNames.gridx = 0;
-		gbc_btnNames.gridy = 14;
+		gbc_btnNames.gridy = 15;
 		contentPane.add(btnNames, gbc_btnNames);
 		//////////////////////END OF GET NAMES //////////////////
 		
@@ -897,23 +930,6 @@ contentPane.add(btnRemNems, gbc_btnRemNems);
 //////////////////////END OF GET RemNems //////////////////
 		
 		
-/////////////////////////START OF GET Res02///////////////////////
-btnRes02 = new JButton("res02");
-btnRes02.addMouseListener(new MouseAdapter() {
-@Override
-public void mouseClicked(MouseEvent e) 
-{show("Getres02 routine to be added");
-
-}
-});
-btnRes02.setToolTipText("Reserved button Res02");
-GridBagConstraints gbc_btnres02 = new GridBagConstraints();
-gbc_btnres02.fill = GridBagConstraints.HORIZONTAL;
-gbc_btnres02.insets = new Insets(0, 0, 5, 5);
-gbc_btnres02.gridx = 0;
-gbc_btnres02.gridy = 15;
-contentPane.add(btnRes02, gbc_btnres02);
-//////////////////////END OF GET RES02 //////////////////
 		
 
 
