@@ -206,7 +206,7 @@ MRKaddtodb.rollArray.removeAll(MRKaddtodb.rollArray);
 int nodupnow=MRKaddtodb.FillMainList(subcode);
 if(nodupnow==0) show("Error in Replace Routine");
 MRKaddtodb.CalculatePageTotal();
-//MoveToAccepted();
+MoveToAccepted();
 fileindex++;
 ShowCurrentList();
 return;
@@ -215,7 +215,7 @@ MRKaddtodb.Remove(subcode);
 int nodupnow=MRKaddtodb.FillMainList(subcode);
 if(nodupnow==0) show("Error in Replace Routine");
 MRKaddtodb.CalculatePageTotal();
-//MoveToAccepted();
+MoveToAccepted();
 fileindex++;
 ShowCurrentList();
 }
@@ -231,7 +231,7 @@ SetData(subcode,TotalReceived,1 );
 
 TotalReceived++;
 
-//MoveToAccepted();
+MoveToAccepted();
 
 if(TotalReceived>5) 
 { //table.setRowSelectionInterval(curRow,curRow);
@@ -668,10 +668,7 @@ btnReject.addMouseListener(new MouseAdapter() {
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		
-		
-	//	MoveToRejected();
-	//    ProcessLists();
+	MoveToRejected();
 	}
 });
 GridBagConstraints gbc_btnReject = new GridBagConstraints();
