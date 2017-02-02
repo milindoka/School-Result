@@ -41,6 +41,8 @@ import javax.swing.table.TableColumnModel;
 import java.awt.Color;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
@@ -80,7 +82,7 @@ public class MRKFrame extends JFrame
  	private JButton btnNames;
 	private JButton btnRemNems;
 	private JButton btnAcceptAll;
-	private JButton btnRes03;
+	private JButton btnValidate;
 	
 	private JTable table;
 	private JScrollPane scrollPane;
@@ -99,6 +101,7 @@ public class MRKFrame extends JFrame
 	  File folder; 
       File[] listOfFiles; 
     
+      public  ArrayList<String> pathArray = new ArrayList<String>(); //array containing full paths
    
     MRKaddtodb  mrkaddtodb;
    
@@ -164,6 +167,101 @@ public class MRKFrame extends JFrame
         
     }
     
+	public void OnAccept()
+	{//while (mrkaddtodb.printing) return;
+		if(chckbxNewCheckBox.isSelected()) { 
+            Thread t = new Thread() {
+               public void run() { mrkaddtodb.PrintMarkSheet();
+                                //  System.out.println("text");
+                                   // other complex code
+                                  }
+                                     };
+                  t.start();
+                  try {
+					t.join();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                                              
+           }
+
+String subcode=DivField.getText()+"="+ExamField.getText()+"="+SubField.getText();
+int success=MRKaddtodb.FillMainList(subcode);
+
+if(success==0) 
+{ if(fileindex>TotalFiles) {     show("Error 01");   return;}
+
+int option=ReplaceDialog();
+if(option==0){ MoveToRejected(); ProcessLists();  }
+if(option==1){ 
+
+if(TotalReceived==1)
+{ MRKaddtodb.subLine="";//special case only one marklist
+MRKaddtodb.rollArray.removeAll(MRKaddtodb.rollArray);
+int nodupnow=MRKaddtodb.FillMainList(subcode);
+if(nodupnow==0) show("Error in Replace Routine");
+MRKaddtodb.CalculatePageTotal();
+MoveToAccepted();
+ProcessLists();
+return;
+}
+MRKaddtodb.Remove(subcode); 
+int nodupnow=MRKaddtodb.FillMainList(subcode);
+if(nodupnow==0) show("Error in Replace Routine");
+MRKaddtodb.CalculatePageTotal();
+MoveToAccepted();
+ProcessLists();
+}
+if(option==2)
+{ show("Replace Empty Only routine not added");  MoveToRejected(); fileindex++; ProcessLists();  
+}
+}
+
+else  ////Not Duplicate, so add to database
+{
+
+SetData(subcode,TotalReceived,1 );
+
+TotalReceived++;
+
+MoveToAccepted();
+
+if(TotalReceived>5) 
+{ //table.setRowSelectionInterval(curRow,curRow);
+Rectangle vr = table.getVisibleRect ();
+//int first = table.rowAtPoint(vr.getLocation());
+vr.translate(0, vr.height);
+int last=table.rowAtPoint(vr.getLocation());
+//int visibleRows = last - first;
+//int mid=visibleRows/2;
+
+if(last>TotalReceived)
+table.scrollRectToVisible(table.getCellRect(TotalReceived-5,0, true));
+else
+table.scrollRectToVisible(table.getCellRect(TotalReceived+5,0, true));
+ScrollToLine(scrollPane,table);
+}
+
+AddRow();
+MRKaddtodb.CalculatePageTotal();
+SetReceivedCount();
+ProcessLists();
+}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
 	public  void ProcessLists()
 	{ if(fileindex>=TotalFiles) {     show("      Finish");        return;}
 	
@@ -195,26 +293,37 @@ public class MRKFrame extends JFrame
 	
 	}
 	
-	public void GetAllFiles() ////in Array listofFiles
-	{
-	     		
-		File f = new File(System.getProperty("java.class.path"));
-		File dir = f.getAbsoluteFile().getParentFile();
-		dir.toString();
+	public int GetAllFiles(String path) ////in Array listofFiles
+
+    { 
+	  	  FilenameFilter mrkFilter = new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					String lowercaseName = name.toLowerCase();
+					if (lowercaseName.endsWith(".mrk")) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			};
+	  	  
+	  	  pathArray.removeAll(pathArray);
+	  	
+	  	  File folder = new File(path);
+	  	  File[] listOfFiles = folder.listFiles(mrkFilter);
+	  	      for (int i = 0; i < listOfFiles.length; i++) {
+	  	        if (listOfFiles[i].isFile()) 
+	  	        {  
+	  	           pathArray.add(listOfFiles[i].getAbsolutePath());
+	  	
+	  	           
+	  	         } 
+	  	      }
+	  	      
+	  	 
+	  	  int TotalMarklists=pathArray.size();
+	  	    return TotalMarklists;
 		
-				
-		//File dir = new File(path);
-		listOfFiles = dir.listFiles(new FilenameFilter()
-		{
-		    public boolean accept(File dir, String name) {
-		        return name.toLowerCase().endsWith(".mrk");
-		    }
-		});
-		
-	   		 // folder = new File(path);
-	   		  // = dir.listFiles();
-	   		 System.out.println(listOfFiles.length);
-	   		 
 	}
 	
 	public void MoveToAccepted()
@@ -367,9 +476,15 @@ public int ReplaceDialog()
 	        	@Override
 	        	public void mouseClicked(MouseEvent arg0)
 	        	{  fileindex=0;
-	        	   GetAllFiles(); 
-	        	   TotalFiles=listOfFiles.length;
-	        	   ProcessLists();
+	      //  	File f = new File(System.getProperty("java.class.path"));
+	      //  	File dir = f.getAbsoluteFile().getParentFile();
+	      //  	String path = dir.toString();
+          String path="/home/milind/test";
+	        	   fileindex=GetAllFiles(path); 
+	        	 //  TotalFiles=listOfFiles.length;
+	        	 //  ProcessLists();
+	        	//   System.out.println(path);
+	        	   System.out.println(fileindex);
 	        	}
 	        });
 	        GridBagConstraints gbc_btnStart = new GridBagConstraints();
@@ -475,86 +590,9 @@ public int ReplaceDialog()
 		btnAccept.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e)
-			{  //while (mrkaddtodb.printing) return;
-				if(chckbxNewCheckBox.isSelected()) { 
-					                                 Thread t = new Thread() {
-					                                    public void run() { mrkaddtodb.PrintMarkSheet();
-					                                                     //  System.out.println("text");
-					                                                        // other complex code
-					                                                       }
-					                                                          };
-					                                       t.start();
-					                                       try {
-															t.join();
-														} catch (InterruptedException e1) {
-															// TODO Auto-generated catch block
-															e1.printStackTrace();
-														}
-					                                                                   
-				                                    }
-				
-				String subcode=DivField.getText()+"="+ExamField.getText()+"="+SubField.getText();
-			  int success=MRKaddtodb.FillMainList(subcode);
-			  
-			  if(success==0) 
-			  { if(fileindex>TotalFiles) {     show("Error 01");   return;}
-				
-			  int option=ReplaceDialog();
-			  if(option==0){ MoveToRejected(); ProcessLists();  }
-			  if(option==1){ 
-				  
-				  			if(TotalReceived==1)
-				  			{ MRKaddtodb.subLine="";//special case only one marklist
-				  		      MRKaddtodb.rollArray.removeAll(MRKaddtodb.rollArray);
-                              int nodupnow=MRKaddtodb.FillMainList(subcode);
-	                          if(nodupnow==0) show("Error in Replace Routine");
-	                          MRKaddtodb.CalculatePageTotal();
-	                          MoveToAccepted();
-	                          ProcessLists();
-                             return;
-                            }
-				              MRKaddtodb.Remove(subcode); 
-			                 int nodupnow=MRKaddtodb.FillMainList(subcode);
-			                 if(nodupnow==0) show("Error in Replace Routine");
-			                 MRKaddtodb.CalculatePageTotal();
-			                 MoveToAccepted();
-			                 ProcessLists();
-			                 }
-			     if(option==2)
-			          { show("Replace Empty Only routine not added");  MoveToRejected(); fileindex++; ProcessLists();  
-			           }
-			  }
-			  
-			  else  ////Not Duplicate, so add to database
-			   {
-				  
-			    SetData(subcode,TotalReceived,1 );
-			    
-			    TotalReceived++;
-			    
-			    MoveToAccepted();
-			     
-			    if(TotalReceived>5) 
-			      { //table.setRowSelectionInterval(curRow,curRow);
-			       	Rectangle vr = table.getVisibleRect ();
-			     	//int first = table.rowAtPoint(vr.getLocation());
-			     	vr.translate(0, vr.height);
-			     	int last=table.rowAtPoint(vr.getLocation());
-			     	//int visibleRows = last - first;
-			     	//int mid=visibleRows/2;
-
-			    	if(last>TotalReceived)
-			    	table.scrollRectToVisible(table.getCellRect(TotalReceived-5,0, true));
-			    	else
-			    		table.scrollRectToVisible(table.getCellRect(TotalReceived+5,0, true));
-			           ScrollToLine(scrollPane,table);
-			       }
-			 
-			    AddRow();
-			    MRKaddtodb.CalculatePageTotal();
-			    SetReceivedCount();
-			    ProcessLists();
-			  }
+			{  			
+				if(fileindex<=TotalFiles)
+				OnAccept();
 			}
 		});
 		GridBagConstraints gbc_btnAccept = new GridBagConstraints();
@@ -933,23 +971,23 @@ contentPane.add(btnRemNems, gbc_btnRemNems);
 		
 
 
-/////////////////////////START OF GET Res03///////////////////////
-btnRes03 = new JButton("Res03");
-btnRes03.addMouseListener(new MouseAdapter() {
+/////////////////////////START OF GET VALIDATE///////////////////////
+btnValidate = new JButton("Validate");
+btnValidate.addMouseListener(new MouseAdapter() {
 @Override
 public void mouseClicked(MouseEvent e) 
-{show("GetRes03 routine to be added");
+{show("GetValidate routine to be added");
 
 }
 });
-btnRes03.setToolTipText("Reserved button Res03");
-GridBagConstraints gbc_btnRes03 = new GridBagConstraints();
-gbc_btnRes03.fill = GridBagConstraints.HORIZONTAL;
-gbc_btnRes03.insets = new Insets(0, 0, 5, 5);
-gbc_btnRes03.gridx = 2;
-gbc_btnRes03.gridy = 15;
-contentPane.add(btnRes03, gbc_btnRes03);
-//////////////////////END OF GET RES03 //////////////////
+btnValidate.setToolTipText("Reserved button Validate");
+GridBagConstraints gbc_btnValidate = new GridBagConstraints();
+gbc_btnValidate.fill = GridBagConstraints.HORIZONTAL;
+gbc_btnValidate.insets = new Insets(0, 0, 5, 5);
+gbc_btnValidate.gridx = 2;
+gbc_btnValidate.gridy = 15;
+contentPane.add(btnValidate, gbc_btnValidate);
+//////////////////////END OF GET Validate //////////////////
 
 
 
@@ -979,9 +1017,9 @@ contentPane.add(btnRes03, gbc_btnRes03);
 	                  "11. Your IT department can prepare result directly from Result.rlt or by using mySql or Sqlite Database",
 	                  "12. You can make single sqlite db file if you want to use Sqlite databse for result processing.",
 	                  "13. A report of all collected marklists can be printed,with page total, for verification purpose.",
-	                  "14. MySql database can be used to uload marks on your School/College website for students and parents.",
-	                  "15. We recommend BOSS, 'Bharat Operating System Solution', India's Linux, if your institution is in India.",
-	                  "16. For free assistance or suggestions, please email us at bossresult@gmail.com or bossresult@gmx.com.",
+	                  "14. MySql database can be used to upload marks on your School/College website for ready referrence.",
+	                  "15. We request you to use BOSS OS, www.bosslinux.in, if your institution is in India.",
+	                  "16. For free assistance or suggestions, please email us at oak444@gmail.com or oak444@gmx.com.",
 	                  "17. The sourcecode of this application is available at http://sourceforge.net/projects/marklist/",
 	                  "18. Do not use pirated software, always use free and open source software. We are always there to help.",
 	                  " "
