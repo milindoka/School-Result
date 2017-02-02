@@ -102,7 +102,9 @@ public class MRKFrame extends JFrame
       File[] listOfFiles; 
     
       public  ArrayList<String> pathArray = new ArrayList<String>(); //array containing full paths
-   
+      public  ArrayList<String> nameArray = new ArrayList<String>(); //array containing file names only
+      
+      
     MRKaddtodb  mrkaddtodb;
    
        
@@ -169,23 +171,7 @@ public class MRKFrame extends JFrame
     
 	public void OnAccept()
 	{//while (mrkaddtodb.printing) return;
-		if(chckbxNewCheckBox.isSelected()) { 
-            Thread t = new Thread() {
-               public void run() { mrkaddtodb.PrintMarkSheet();
-                                //  System.out.println("text");
-                                   // other complex code
-                                  }
-                                     };
-                  t.start();
-                  try {
-					t.join();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-                                              
-           }
-
+		
 String subcode=DivField.getText()+"="+ExamField.getText()+"="+SubField.getText();
 int success=MRKaddtodb.FillMainList(subcode);
 
@@ -193,7 +179,7 @@ if(success==0)
 { if(fileindex>TotalFiles) {     show("Error 01");   return;}
 
 int option=ReplaceDialog();
-if(option==0){ MoveToRejected(); ProcessLists();  }
+if(option==0){ MoveToRejected(); fileindex++; ShowCurrentList();  }
 if(option==1){ 
 
 if(TotalReceived==1)
@@ -203,7 +189,8 @@ int nodupnow=MRKaddtodb.FillMainList(subcode);
 if(nodupnow==0) show("Error in Replace Routine");
 MRKaddtodb.CalculatePageTotal();
 MoveToAccepted();
-ProcessLists();
+fileindex++;
+ShowCurrentList();
 return;
 }
 MRKaddtodb.Remove(subcode); 
@@ -211,10 +198,11 @@ int nodupnow=MRKaddtodb.FillMainList(subcode);
 if(nodupnow==0) show("Error in Replace Routine");
 MRKaddtodb.CalculatePageTotal();
 MoveToAccepted();
-ProcessLists();
+fileindex++;
+ShowCurrentList();
 }
 if(option==2)
-{ show("Replace Empty Only routine not added");  MoveToRejected(); fileindex++; ProcessLists();  
+{ show("Replace Empty Only routine not added");  MoveToRejected(); fileindex++; ShowCurrentList();  
 }
 }
 
@@ -246,7 +234,8 @@ ScrollToLine(scrollPane,table);
 AddRow();
 MRKaddtodb.CalculatePageTotal();
 SetReceivedCount();
-ProcessLists();
+fileindex++;
+ShowCurrentList();
 }
 
 		
@@ -262,18 +251,11 @@ ProcessLists();
 	
 	
 	
-	public  void ProcessLists()
-	{ if(fileindex>=TotalFiles) {     show("      Finish");        return;}
-	
-	  while(!listOfFiles[fileindex].isFile()) { fileindex++; if(fileindex>=TotalFiles) 
-		                                        {show("over3");
-	                                             return;
-		                                        } 
-		                                        }
-	 
+	public  void ShowCurrentList()
+	{  
 	  if(fileindex<TotalFiles)
 	  {
-	  String files=listOfFiles[fileindex].getAbsolutePath();
+	  String files=pathArray.get(fileindex);
 	     if (files.endsWith(".mrk") || files.endsWith(".MRK"))
 	     { 	 //  strArray.removeAll(strArray);  
 	         System.out.println(files);
@@ -284,11 +266,12 @@ ProcessLists();
 	         SubField.setText(temp[2].toUpperCase());
 	         Submitted.setText(temp[3].toUpperCase());
 	         
-	         fileindex++;
+	        
 	         //show(stemp);
+
 	        
 	      }
-	     else { fileindex++; ProcessLists(); }
+	  
 	  }
 	
 	}
@@ -315,7 +298,7 @@ ProcessLists();
 	  	        if (listOfFiles[i].isFile()) 
 	  	        {  
 	  	           pathArray.add(listOfFiles[i].getAbsolutePath());
-	  	
+	  	           nameArray.add(listOfFiles[i].getName());
 	  	           
 	  	         } 
 	  	      }
@@ -333,7 +316,7 @@ ProcessLists();
 	//String fnem=path+"/Result.rlt";
 		
 	try{
-		String fnem=listOfFiles[fileindex-1].getName();
+		String fnem=nameArray.get(fileindex);
 		String oldname=path+"/"+fnem;
 
  	   File afile =new File(oldname);
@@ -475,16 +458,20 @@ public int ReplaceDialog()
 	        btnStart.addMouseListener(new MouseAdapter() {
 	        	@Override
 	        	public void mouseClicked(MouseEvent arg0)
-	        	{  fileindex=0;
-	      //  	File f = new File(System.getProperty("java.class.path"));
-	      //  	File dir = f.getAbsoluteFile().getParentFile();
-	      //  	String path = dir.toString();
-          String path="/home/milind/test";
-	        	   fileindex=GetAllFiles(path); 
-	        	 //  TotalFiles=listOfFiles.length;
-	        	 //  ProcessLists();
-	        	//   System.out.println(path);
-	        	   System.out.println(fileindex);
+	        	{   pathArray.removeAll(pathArray);
+	        		nameArray.removeAll(nameArray);
+	        		fileindex=0;
+	                
+	        		File f = new File(System.getProperty("java.class.path"));
+	             	File dir = f.getAbsoluteFile().getParentFile();
+	                String path = dir.toString();
+                  
+	                //  String path="/home/milind/test";
+	        	    
+	                TotalFiles=GetAllFiles(path); 
+	        	    ShowCurrentList();
+	        	   
+	        	   //System.out.println(fileindex);
 	        	}
 	        });
 	        GridBagConstraints gbc_btnStart = new GridBagConstraints();
@@ -591,7 +578,7 @@ public int ReplaceDialog()
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{  			
-				if(fileindex<=TotalFiles)
+				if(fileindex<TotalFiles)
 				OnAccept();
 			}
 		});
