@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JViewport;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.GridBagLayout;
@@ -43,6 +44,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 
+
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
@@ -55,6 +57,7 @@ public class MRKFrame extends JFrame
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	
 	private JPanel contentPane;
 	private JButton btnStart;
@@ -91,7 +94,22 @@ public class MRKFrame extends JFrame
     int TotalFiles;////in one session
     int fileindex;/////current file in one session
     int TotalReceived; ///Total files received in all sessions
- 
+
+    
+    final Timer timer = new Timer(1000, new ActionListener() 
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+        	 if(fileindex<TotalFiles) OnAccept();  
+        	 else timer.stop();
+        }
+    });
+
+    
+    
+    
+    
     public static void show(String msg) {JOptionPane.showMessageDialog(null, msg);}
     public Object GetData(JTable table, int row_index, int col_index){
   	  return table.getModel().getValueAt(row_index, col_index);
@@ -169,7 +187,7 @@ public class MRKFrame extends JFrame
         
     }
     
-	public void OnAccept()
+public void OnAccept()
 	{//while (mrkaddtodb.printing) return;
 		
 String subcode=DivField.getText()+"="+ExamField.getText()+"="+SubField.getText();
@@ -188,7 +206,7 @@ MRKaddtodb.rollArray.removeAll(MRKaddtodb.rollArray);
 int nodupnow=MRKaddtodb.FillMainList(subcode);
 if(nodupnow==0) show("Error in Replace Routine");
 MRKaddtodb.CalculatePageTotal();
-MoveToAccepted();
+//MoveToAccepted();
 fileindex++;
 ShowCurrentList();
 return;
@@ -197,7 +215,7 @@ MRKaddtodb.Remove(subcode);
 int nodupnow=MRKaddtodb.FillMainList(subcode);
 if(nodupnow==0) show("Error in Replace Routine");
 MRKaddtodb.CalculatePageTotal();
-MoveToAccepted();
+//MoveToAccepted();
 fileindex++;
 ShowCurrentList();
 }
@@ -213,7 +231,7 @@ SetData(subcode,TotalReceived,1 );
 
 TotalReceived++;
 
-MoveToAccepted();
+//MoveToAccepted();
 
 if(TotalReceived>5) 
 { //table.setRowSelectionInterval(curRow,curRow);
@@ -237,22 +255,13 @@ SetReceivedCount();
 fileindex++;
 ShowCurrentList();
 }
-
 		
-		
-		
-		
-		
-		
-		
-		
-		
-	}
+}
 	
 	
 	
 	public  void ShowCurrentList()
-	{  
+	{ 
 	  if(fileindex<TotalFiles)
 	  {
 	  String files=pathArray.get(fileindex);
@@ -615,6 +624,7 @@ public void mouseClicked(MouseEvent arg0)
 }
 });
 
+ 
 
 
 
@@ -623,10 +633,15 @@ btnAcceptAll = new JButton("Accept All");
 btnAcceptAll.addMouseListener(new MouseAdapter() {
 @Override
 public void mouseClicked(MouseEvent e) 
-{show("routine to be added");
-
+{
+timer.start();	
+	
 }
 });
+
+
+
+
 btnAcceptAll.setToolTipText("Accept All Files");
 GridBagConstraints gbc_btnres02 = new GridBagConstraints();
 gbc_btnres02.fill = GridBagConstraints.HORIZONTAL;
@@ -635,7 +650,6 @@ gbc_btnres02.gridx = 0;
 gbc_btnres02.gridy = 8;
 contentPane.add(btnAcceptAll, gbc_btnres02);
 //////////////////////END OF GET RES02 //////////////////
-
 
 
 
@@ -1024,7 +1038,8 @@ JOptionPane.showMessageDialog (null, multiLineMsg,"Help",JOptionPane.PLAIN_MESSA
 		
 			}
 ////////////////////////END OF CONSTRUCTOR/////////////////////////////
-	public static boolean isCellVisible(JTable table, int rowIndex, int vColIndex) {
+	public static boolean isCellVisible(JTable table, int rowIndex, int vColIndex) 
+	{  
 	    if (!(table.getParent() instanceof JViewport)) {
 	      return false;
 	    }
@@ -1036,6 +1051,9 @@ JOptionPane.showMessageDialog (null, multiLineMsg,"Help",JOptionPane.PLAIN_MESSA
 	  }
 	
 
+	
+	
+	
 	
 		
 }
